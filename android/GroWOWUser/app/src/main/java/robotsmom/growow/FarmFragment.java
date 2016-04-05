@@ -10,9 +10,19 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.MediaController;
+import android.widget.Toast;
+
+import retrofit2.adapter.rxjava.HttpException;
+import robotsmom.growow.restapi.ApiService;
+import robotsmom.growow.restapi.ApiService.ServerAPIInterface;
+import robotsmom.growow.restapi.model.OKJson;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by luke on 3/24/16. It is not possible to draw over SurfaceView should be replaced with VideoView (TextureView)
@@ -25,7 +35,17 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     private ProgressBar circleProgress;
     private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
 
+    private ServerAPIInterface apiService;
+    private Subscription subscription;
+
     private FarmFragment.RenderingThread mThread;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        apiService = new ApiService().getApi();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,10 +65,90 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         circleProgress = (ProgressBar) view.findViewById(R.id.circleProgress);
         circleProgress.bringToFront();
 
+        intentVideoCall();
+
         return view;
     }
 
+    @Override
+    public void onStop() {
+        stopVideoCall();
+        super.onStop();
+    }
 
+    @Override
+    public void onDestroy() {
+        subscription.unsubscribe();
+        apiService = null;
+        super.onDestroy();
+    }
+
+
+    private void intentVideoCall() {
+
+        subscription = apiService
+                .intentVideo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<OKJson>() {
+                    @Override
+                    public void onCompleted() {
+                        Toast.makeText(getContext(),
+                                "Completed",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // cast to retrofit.HttpException to get the response code
+                        if (e instanceof HttpException) {
+                            HttpException response = (HttpException) e;
+                            int code = response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(OKJson okJson) {
+                        Toast.makeText(getContext(),
+                                "Result is " + okJson.getResult(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+    }
+
+    private void stopVideoCall() {
+
+        subscription = apiService
+                .stopVideo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<OKJson>() {
+                    @Override
+                    public void onCompleted() {
+                        Toast.makeText(getContext(),
+                                "Completed",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // cast to retrofit.HttpException to get the response code
+                        if (e instanceof HttpException) {
+                            HttpException response = (HttpException) e;
+                            int code = response.code();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(OKJson okJson) {
+                        Toast.makeText(getContext(),
+                                "Result is " + okJson.getResult(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+    }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
