@@ -329,15 +329,16 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-
-        if (isInPlaybackState() && mediaController != null) {
-            toggleMediaControlsVisiblity();
-        }
-
-        return false;
-    }
+    // No need handle touches. Will be handled by main fragment FarmFragment.
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//
+//        if (isInPlaybackState() && mediaController != null) {
+//            toggleMediaControlsVisiblity();
+//        }
+//
+//        return false;
+//    }
 
     @Override
     public boolean onTrackballEvent(MotionEvent ev) {

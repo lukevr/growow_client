@@ -6,7 +6,9 @@ import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import java.util.Random;
 
 import retrofit2.adapter.rxjava.HttpException;
 import robotsmom.growow.restapi.ApiService;
@@ -29,11 +33,13 @@ import rx.schedulers.Schedulers;
  */
 public class FarmFragment extends Fragment implements TextureView.SurfaceTextureListener, VideoStateListener {
 
+    private static final String LOG_TAG = "FarmFragment";
     private RelativeLayout root;
     private VideoView vidView;
-    private TextureView mTextureView;
+    private FarmGridView mTextureView;
     private ProgressBar circleProgress;
-    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
+//    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
+    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
 
     private ServerAPIInterface apiService;
     private Subscription subscription;
@@ -56,7 +62,9 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
         vidView = new VideoView(getContext(), this);
         vidView.setVideoPath(vSource);
-        vidView.setMediaController(new MediaController(getContext()));
+        MediaController mc = new MediaController(getContext());
+        mc.setEnabled(false);
+        vidView.setMediaController(mc);
 
         root.addView(vidView);
 
@@ -69,6 +77,19 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
         return view;
     }
+
+//    @Override
+//    public boolean onTouch(View view, MotionEvent event)
+//    {
+//        Log.d(LOG_TAG, "Got touch in (" + (event.getX() - mTextureView.getLeft()) + ", " + (event.getY() - mTextureView.getTop()) + ")");
+//        Log.d(LOG_TAG, "view.Left(" + view.getLeft() + "), Right(" + view.getRight() + ")" + ", Top(" + view.getTop() + ")");
+//        Log.d(LOG_TAG, "textureView.Left(" + mTextureView.getLeft() + "), Right(" + mTextureView.getRight() + ")" + ", Top(" + mTextureView.getTop() + ")");
+//        drawGrid(mTextureView, 5, 3, 1.f, 1.f);
+//
+//        return false;
+//    }
+//
+
 
     @Override
     public void onStop() {
@@ -152,8 +173,9 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        mThread = new RenderingThread(mTextureView);
-        mThread.start();
+//        mThread = new RenderingThread(mTextureView);
+//        mThread.start();
+        mTextureView.drawGrid(mTextureView, 3, 5, .0f, .0f);
     }
 
     @Override
@@ -178,46 +200,56 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         switch (state) {
             case(VideoView.STATE_PLAYING):
                 circleProgress.setVisibility(View.GONE);
-                mTextureView = new TextureView(getContext());
+                mTextureView = new FarmGridView(getContext());
                 mTextureView.setSurfaceTextureListener(this);
                 mTextureView.setOpaque(false);
+                mTextureView.setLeft(10);
+                mTextureView.setTop(10);
+                this.getView().setOnTouchListener(mTextureView);
                 root.addView(mTextureView);
-
         }
 
     }
 
-    private static class RenderingThread extends Thread {
-        private final TextureView mSurface;
+    private static class RenderingThread extends Thread
+    {
+        private final FarmGridView mSurface;
         private volatile boolean mRunning = true;
 
-        public RenderingThread(TextureView surface) {
+        public RenderingThread(FarmGridView surface) {
             mSurface = surface;
         }
 
         @Override
-        public void run() {
-            float x = 0.0f;
-            float y = 0.0f;
-            float speedX = 5.0f;
-            float speedY = 3.0f;
+        public void run()
+        {
+            Random rnd =  new Random(23);
+            float x = (float)rnd.nextInt(mSurface.getWidth());
+            float y = (float)rnd.nextInt(mSurface.getHeight());
+
+            float speedX = (float)rnd.nextInt(10);//5.0f;
+            float speedY = (float)rnd.nextInt(10);//3.0f;
+
+            float deltaX = 20.f;
+            float deltaY = 20.f;
 
             Paint paint = new Paint();
             paint.setColor(0xff00ff00);
 
-            while (mRunning && !Thread.interrupted()) {
+            while (mRunning && !Thread.interrupted())
+            {
                 final Canvas canvas = mSurface.lockCanvas(null);
                 try {
                     canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
-                    canvas.drawRect(x, y, x + 20.0f, y + 20.0f, paint);
+                    canvas.drawRect(x, y, x + deltaX, y + deltaY, paint);
                 } finally {
                     mSurface.unlockCanvasAndPost(canvas);
                 }
 
-                if (x + 20.0f + speedX >= mSurface.getWidth() || x + speedX <= 0.0f) {
+                if (x + deltaX + speedX >= mSurface.getWidth() || x + speedX <= 0.0f) {
                     speedX = -speedX;
                 }
-                if (y + 20.0f + speedY >= mSurface.getHeight() || y + speedY <= 0.0f) {
+                if (y + deltaY + speedY >= mSurface.getHeight() || y + speedY <= 0.0f) {
                     speedY = -speedY;
                 }
 
