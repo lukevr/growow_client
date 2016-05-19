@@ -510,11 +510,45 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         this.invalidate();
     }
 
-    SurfaceTextureListener surfaceTextureListener = new SurfaceTextureListener() {
+    public void setResizeStream(boolean sizeStream)
+    {
+        surfaceTextureListener.setResizeStream(sizeStream);
+    }
+
+    FarmSurfaceTextureListener surfaceTextureListener = new FarmSurfaceTextureListener()
+    {
+        private boolean _resizeStream = false;
+        private float _width, _height;
+        Matrix _matrix = new Matrix();
+
         @Override
-        public void onSurfaceTextureAvailable(final SurfaceTexture surface, final int width, final int height) {
+        public void setResizeStream(boolean resizeStream)
+        {
+            _resizeStream = resizeStream;
+            _matrix = new Matrix();
+
+            if( _resizeStream )
+            {
+                float trapHead = _width / 12;
+                float trapDeHeight = _height / 3;
+                float[] src = new float[]{trapHead, trapDeHeight,
+                                            _width, trapDeHeight,
+                                            _width, _height,
+                                            0, _height};
+                float[] dst = new float[]{0, 0, _width, 0, _width, _height, 0, _height};
+                _matrix.setPolyToPoly(src, 0, dst, 0, 4);
+            }
+            setTransform(_matrix);
+        }
+
+        @Override
+        public void onSurfaceTextureAvailable(final SurfaceTexture surface, final int width, final int height)
+        {
             Log.e(LOG_TAG, "Surface texture now avaialble.");
             surfaceTexture = surface;
+
+            _width = width;
+            _height = height;
             openVideo();
         }
 
@@ -546,8 +580,10 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         }
 
         @Override
-        public void onSurfaceTextureUpdated(final SurfaceTexture surface) {
-
+        public void onSurfaceTextureUpdated(final SurfaceTexture surface)
+        {
+            Log.e(LOG_TAG, "Surface texture updated.");
+            //setTransform(_matrix);
         }
     };
 

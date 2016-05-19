@@ -2,6 +2,7 @@ package robotsmom.growow;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
@@ -38,8 +39,8 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     private VideoView vidView;
     private FarmGridView mTextureView;
     private ProgressBar circleProgress;
-//    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
-    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
+    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
+//    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
 
     private ServerAPIInterface apiService;
     private Subscription subscription;
@@ -180,12 +181,13 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
+        Log.i(LOG_TAG, "onSurfaceTextureSizeChanged");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        if (mThread != null) mThread.stopRendering();
+        if (mThread != null)
+            mThread.stopRendering();
         return true;
     }
 
@@ -195,9 +197,11 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     }
 
     @Override
-    public void videoStateCallback(int state) {
-
-        switch (state) {
+    public void videoStateCallback(int state)
+    {
+        Log.i(LOG_TAG, "Videostate was changed to: " + state);
+        switch (state)
+        {
             case(VideoView.STATE_PLAYING):
                 circleProgress.setVisibility(View.GONE);
                 mTextureView = new FarmGridView(getContext());
@@ -206,9 +210,17 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
                 mTextureView.setLeft(10);
                 mTextureView.setTop(10);
                 this.getView().setOnTouchListener(mTextureView);
+
+                // adding fake perspective to grid
+                mTextureView.setPerspective(0.f, 0.f, 0.f, .0f, .0f, .0f, .0f, .0f);
+
                 root.addView(mTextureView);
         }
 
+    }
+
+    public void setResizeStream(boolean resizeStream) {
+        vidView.setResizeStream(resizeStream);
     }
 
     private static class RenderingThread extends Thread

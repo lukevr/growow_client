@@ -2,6 +2,10 @@ package robotsmom.growow;
 
 import android.graphics.PointF;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by rettpop on 16-05-04.
  */
@@ -13,6 +17,7 @@ public class FarmCell
     private float _height;
     private boolean _isSelected = false;
     private String _description = null;
+
 
     public FarmCell(float left, float top, float width, float height) {
         this._left = left;
@@ -36,7 +41,7 @@ public class FarmCell
         _isSelected = selected;
     }
 
-    public float getHeight() {
+    public float height() {
         return _height;
     }
 
@@ -44,7 +49,7 @@ public class FarmCell
         this._height = height;
     }
 
-    public float getWidth() {
+    public float width() {
         return _width;
     }
 
@@ -52,7 +57,7 @@ public class FarmCell
         this._width = width;
     }
 
-    public float getTop() {
+    public float top() {
         return _top;
     }
 
@@ -60,7 +65,7 @@ public class FarmCell
         this._top = top;
     }
 
-    public float getLeft() {
+    public float left() {
         return _left;
     }
 
@@ -68,7 +73,7 @@ public class FarmCell
         this._left = left;
     }
 
-    public String getDescription() {
+    public String description() {
         return _description;
     }
 
@@ -84,5 +89,18 @@ public class FarmCell
     public float bottom()
     {
         return _top + _height;
+    }
+
+    public PointF[] points()
+    {
+        // At the moment we have only 4 points per cell.
+        // But later we can make 5, 6, or even ✡ like cells.
+        // For farm nerds.
+        PointF lt = new PointF(_left, _top);
+        PointF rt = new PointF(right(), _top);
+        PointF rb = new PointF(right(), bottom());
+        PointF lb = new PointF(_left, bottom());
+
+        return (new PointF[]{lt, rt, rb, lb});
     }
 }

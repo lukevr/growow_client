@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity
 
     private FarmFragment farmFragment;
     private StatFragment statFragment = new StatFragment();
-
+    private boolean _resizeStream = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        FloatingActionButton trap = (FloatingActionButton) findViewById(R.id.trapezoid);
+        trap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _resizeStream = !_resizeStream;
+                farmFragment.setResizeStream(_resizeStream);
             }
         });
 
