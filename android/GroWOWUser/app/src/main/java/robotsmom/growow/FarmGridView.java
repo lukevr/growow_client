@@ -88,10 +88,10 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
     }
 
     // fills cells array with fake cells. Just for test
-    public void fillCells(int cols, int rows)
+    public ArrayList<FarmCell> fillCells(int cols, int rows)
     {
         String[] vegetables = {"Carrot", "Tomato", "Berry", "Cucumber", "Ukrop", "Patison", "Corn", "Pumpkin"};
-        _cells = new ArrayList<FarmCell>();
+        ArrayList<FarmCell> cells = new ArrayList<FarmCell>();
         float gridWidth = this.getWidth();
         float gridHeight = this.getHeight();
 
@@ -108,32 +108,53 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 int descrIdx = (int) (Math.random() * vegetables.length);
                 newCell.setDescription(vegetables[descrIdx]);
 
-                _cells.add(newCell);
+                cells.add(newCell);
             }
         }
+
+        return cells;
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent event)
     {
+        if( MotionEvent.ACTION_DOWN != event.getAction() ) {
+            return false;
+        }
         Log.d(LOG_TAG, "Got touch in (" + event.getX() + ", " + event.getY() + ")");
+        Log.d(LOG_TAG, "view is: " + view.toString());
         Log.d(LOG_TAG, "view.Left(" + view.getLeft() + "), Right(" + view.getRight() + ")" + ", Top(" + view.getTop() + ")");
+        Log.d(LOG_TAG, "this.Left(" + this.getLeft() + "), Right(" + this.getRight() + ")" + ", Top(" + this.getTop() + ")");
+        int[] gridLoc = new int[2];
+        int[] viewLoc = new int[2];
+        this.getLocationOnScreen(gridLoc);
+        view.getLocationOnScreen(viewLoc);
+        Log.d(LOG_TAG, "this.locationOnScreen(" + gridLoc[0] + ", " + gridLoc[1] + ")");
 
         //drawGrid(this, 5, 3, event.getX(), event.getY());
         if( null == _cells ) {
-            fillCells(5, 3);
+            _cells = fillCells(5, 4);
         }
 
-        PointF point = new PointF(event.getX(), event.getY());
+        PointF point = new PointF(event.getX() - gridLoc[0] + viewLoc[0], event.getY() - gridLoc[1] + viewLoc[1]);
 
+        Log.d(LOG_TAG, "point.Left(" + point.x + ", " + point.y + ")");
         // find touched cell
-        for (FarmCell oneCell:_cells) {
-            oneCell.setSelected( oneCell.containsPoint(point) );
+        for (FarmCell oneCell:_cells)
+        {
+            if( oneCell.containsPoint(point) )
+            {
+                oneCell.setSelected( !oneCell.isSelected() );
+            }
+            else {
+                // clear current selection
+                oneCell.setSelected(false);
+            }
         }
 
         drawCells(_cells);
 
-        return false;
+        return true;
     }
 
 
@@ -156,7 +177,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         final float kInactiveCellBorderWidth = 5.f;
 
         Paint paint = new Paint();
-        paint.setTextSize(60.f);
+        paint.setTextSize(30.f);
         paint.setTextAlign(Paint.Align.CENTER);
         Rect textRect = new Rect();
 
@@ -244,23 +265,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
 
     public void drawGrid(FarmGridView txv, int cols, int rows, float selX, float selY)
     {
-        Paint paint = new Paint();
-        paint.setColor(0xff00ff00);
-        paint.setStrokeWidth(5.f);
-        final Canvas canvas = txv.lockCanvas();
-        try
-        {
-            canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
-            for( float idx = 0; idx <= txv.getWidth(); idx += txv.getWidth()/cols) {
-                canvas.drawLine(idx, 0, idx, txv.getHeight(), paint);
-            }
-
-            for( float idx = 0; idx <= txv.getHeight(); idx += txv.getHeight()/rows) {
-                canvas.drawLine(0, idx, txv.getWidth(), idx, paint);
-            }
-        }
-        finally {
-            txv.unlockCanvasAndPost(canvas);
-        }
+        _cells = fillCells(cols, rows);
+        drawCells(_cells);
     }
 }

@@ -3,8 +3,11 @@ package robotsmom.growow;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,6 +20,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.RelativeLayout;
 
 import java.io.IOException;
 
@@ -203,25 +207,33 @@ public class VideoView extends TextureView implements MediaPlayerControl{
     }
 
     @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec)
+    {
         // Will resize the view if the video dimensions have been found.
         // video dimensions are found after onPrepared has been called by MediaPlayer
         Log.d(LOG_TAG, "onMeasure number " + number);
         int width = getDefaultSize(videoWidth, widthMeasureSpec);
         int height = getDefaultSize(videoHeight, heightMeasureSpec);
-        if ((videoWidth > 0) && (videoHeight > 0)) {
-            if ((videoWidth * height) > (width * videoHeight)) {
+        if ((videoWidth > 0) && (videoHeight > 0))
+        {
+            if ((videoWidth * height) > (width * videoHeight))
+            {
                 Log.d(LOG_TAG, "Image too tall, correcting.");
                 height = (width * videoHeight) / videoWidth;
-            } else if ((videoWidth * height) < (width * videoHeight)) {
+            }
+            else if ((videoWidth * height) < (width * videoHeight))
+            {
                 Log.d(LOG_TAG, "Image too wide, correcting.");
                 width = (height * videoWidth) / videoHeight;
-            } else {
+            }
+            else
+            {
                 Log.d(LOG_TAG, "Aspect ratio is correct.");
             }
         }
         Log.d(LOG_TAG, "Setting size: " + width + '/' + height + " for number " + number);
         setMeasuredDimension((int)(width * widthScale), (int)(height * heightScale));
+//        setMeasuredDimension((int)(height * heightScale), (int)(height * heightScale));
     }
 
     // Listeners
@@ -289,6 +301,14 @@ public class VideoView extends TextureView implements MediaPlayerControl{
             targetState = STATE_ERROR;
             Log.e(LOG_TAG, "There was an error during video playback.");
             return true;
+        }
+    };
+
+    private MediaPlayer.OnInfoListener infoListener = new MediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+            Log.e(LOG_TAG, "There was info udate during video playback: " + what + " extra code: " + extra);
+            return false;
         }
     };
 
@@ -517,7 +537,7 @@ public class VideoView extends TextureView implements MediaPlayerControl{
 
     FarmSurfaceTextureListener surfaceTextureListener = new FarmSurfaceTextureListener()
     {
-        private boolean _resizeStream = false;
+        private boolean _resizeStream = true;
         private float _width, _height;
         Matrix _matrix = new Matrix();
 
@@ -529,13 +549,16 @@ public class VideoView extends TextureView implements MediaPlayerControl{
 
             if( _resizeStream )
             {
-                float trapHead = _width / 12;
-                float trapDeHeight = _height / 3;
-                float[] src = new float[]{trapHead, trapDeHeight,
-                                            _width, trapDeHeight,
-                                            _width, _height,
-                                            0, _height};
+                float trapHeadLeft = (float)(_width / 4.8);
+                float trapHeadRight = (float)(_width / 5.3);
+                float trapDeHeight = 0; //_height / 3;
+                // resize header
+                float[] src = new float[]{trapHeadLeft, trapDeHeight,
+                        _width - trapHeadRight, trapDeHeight,
+                        _width, _height,
+                        0, _height};
                 float[] dst = new float[]{0, 0, _width, 0, _width, _height, 0, _height};
+                // resize footer
                 _matrix.setPolyToPoly(src, 0, dst, 0, 4);
             }
             setTransform(_matrix);
@@ -555,6 +578,11 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         @Override
         public void onSurfaceTextureSizeChanged(final SurfaceTexture surface, final int width, final int height) {
             Log.e(LOG_TAG, "Resized surface texture: " + width + '/' + height);
+
+            // try to do nothing if we are playing.
+            if( STATE_PLAYING == targetState ) {
+                return;
+            }
             surfaceWidth = width;
             surfaceHeight = height;
             boolean isValidState =  (targetState == STATE_PLAYING);
@@ -582,10 +610,8 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         @Override
         public void onSurfaceTextureUpdated(final SurfaceTexture surface)
         {
-            Log.e(LOG_TAG, "Surface texture updated.");
+//            Log.e(LOG_TAG, "Surface texture updated.");
             //setTransform(_matrix);
         }
     };
-
-
 }
