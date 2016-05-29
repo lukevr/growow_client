@@ -1,6 +1,11 @@
 package robotsmom.growow;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -8,12 +13,43 @@ import java.util.ArrayList;
  */
 public class FarmBed
 {
-    private String bedID;
+    private int id;
     private float width;
     private float height;
     private String units;
     private String streamURL;
     private ArrayList<FarmCell> cells;
+    private FarmBedDistorsion distorsion;
+
+    public FarmBed(JSONObject json)
+    {
+        try {
+            // properties
+            id = json.getInt("id");
+            streamURL = json.getString("streamURL");
+
+            // size
+            JSONObject tmpObj = json.getJSONObject("size");
+            width = BigDecimal.valueOf(tmpObj.getDouble("width")).floatValue();
+            height = BigDecimal.valueOf(tmpObj.getDouble("width")).floatValue();
+            units = tmpObj.getString("units");
+
+            // distortion
+            tmpObj = json.getJSONObject("distortion");
+            distorsion = new FarmBedDistorsion(tmpObj);
+
+            // cells
+            cells = new ArrayList<FarmCell>();
+            JSONArray cellsArr = json.getJSONArray("cells");
+            for (int idx = 0; idx < cellsArr.length(); idx++) {
+                cells.add(new FarmCell(cellsArr.getJSONObject(idx)));
+            }
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public FarmBed(float width, float height, String streamURL)
     {
@@ -21,6 +57,7 @@ public class FarmBed
         this.height = height;
         this.streamURL = streamURL;
     }
+
 
     public float getWidth() {
         return width;
@@ -46,4 +83,11 @@ public class FarmBed
         this.streamURL = streamURL;
     }
 
+    public FarmBedDistorsion getDistorsion() {
+        return distorsion;
+    }
+
+    public void setDistorsion(FarmBedDistorsion distorsion) {
+        this.distorsion = distorsion;
+    }
 }

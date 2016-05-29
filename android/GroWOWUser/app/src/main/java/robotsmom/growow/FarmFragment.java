@@ -41,8 +41,8 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     private VideoView vidView;
     private FarmGridView gridView;
     private ProgressBar circleProgress;
-//    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
-    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
+    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
+//    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
 
     FarmBed _bed;
 

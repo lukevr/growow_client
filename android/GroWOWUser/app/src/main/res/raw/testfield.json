@@ -1,0 +1,320 @@
+{
+	"field": {
+		"id": "1",
+		"name": "Test field",
+		"owner": {
+			"id": 1,
+			"name": "Vic",
+			"site": "http://www.growow.org"
+		},
+		"geo": {
+			"latitude": "30.471411",
+			"longitude": "50,330431",
+			"timezone": "UTC+02:00"
+		},
+		"address": {
+			"country": "Ukraine",
+			"city": "Kyiv"
+		},
+		"beds": [{
+			"id": "1",
+			"streamURL": "rtsp://178.214.221.154:1935/live/myStream",
+			"size": {
+				"units": "cm",
+				"width": "490",
+				"height": "450",
+			},
+			"distorsion": {
+				"leftTopX": "102.0",
+				"leftTopY": "22.5",
+				"rightTopX": "-102.0",
+				"rightTopY": "22.5",
+				"leftBottomX": "0",
+				"leftBottomY": "0",
+				"rightBottomX": "0",
+				"rightBottomY": "0"
+			},
+			"cells": [{
+					"id": "101",
+					"x": "10",
+					"y": "10",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Cucumber",
+						"plantName": "Cucumber",
+						"variety": "Krasnaya doyarka",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "102",
+					"x": "120",
+					"y": "10",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Onion",
+						"plantName": "Onion",
+						"variety": "Tor usual",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "103",
+					"x": "270",
+					"y": "10",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "berry",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Melon",
+						"plantName": "Melon",
+						"variety": "Khersonskiy sladkiy",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "104",
+					"x": "380",
+					"y": "10",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Tomato",
+						"plantName": "Pomidor",
+						"variety": "Sr.",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				},
+
+
+				{
+					"id": "201",
+					"x": "10",
+					"y": "120",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Cucumber",
+						"plantName": "Cucumber",
+						"variety": "Krasnaya doyarka",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "202",
+					"x": "120",
+					"y": "120",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Onion",
+						"plantName": "Onion",
+						"variety": "Tor usual",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "203",
+					"x": "270",
+					"y": "120",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "berry",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Melon",
+						"plantName": "Melon",
+						"variety": "Khersonskiy sladkiy",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "204",
+					"x": "380",
+					"y": "120",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Tomato",
+						"plantName": "Pomidor",
+						"variety": "Sr.",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				},
+
+				{
+					"id": "301",
+					"x": "10",
+					"y": "230",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Cucumber",
+						"plantName": "Cucumber",
+						"variety": "Krasnaya doyarka",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "302",
+					"x": "120",
+					"y": "230",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Onion",
+						"plantName": "Onion",
+						"variety": "Tor usual",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "303",
+					"x": "270",
+					"y": "230",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "berry",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Melon",
+						"plantName": "Melon",
+						"variety": "Khersonskiy sladkiy",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "304",
+					"x": "380",
+					"y": "230",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Tomato",
+						"plantName": "Pomidor",
+						"variety": "Sr.",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				},
+
+				{
+					"id": "401",
+					"x": "10",
+					"y": "340",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Cucumber",
+						"plantName": "Cucumber",
+						"variety": "Krasnaya doyarka",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "402",
+					"x": "120",
+					"y": "340",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Onion",
+						"plantName": "Onion",
+						"variety": "Tor usual",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "403",
+					"x": "270",
+					"y": "340",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "berry",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Melon",
+						"plantName": "Melon",
+						"variety": "Khersonskiy sladkiy",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}, {
+					"id": "404",
+					"x": "380",
+					"y": "340",
+					"width": "100",
+					"height": "100",
+					"isActive": "1",
+					"type": "ground",
+					"plants": [{
+						"typeID": "vegetable",
+						"descriptionURL": "https://en.wikipedia.org/wiki/Tomato",
+						"plantName": "Pomidor",
+						"variety": "Sr.",
+						"plantingDate": "20/05/2016",
+						"ripeningPlannedDate": "20/07/2016",
+						"readyForHarvest": "0"
+					}]
+				}
+			]
+		}]
+	}
+}

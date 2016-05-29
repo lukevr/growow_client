@@ -551,7 +551,7 @@ public class VideoView extends TextureView implements MediaPlayerControl{
             {
                 float trapHeadLeft = (float)(_width / 4.8);
                 float trapHeadRight = (float)(_width / 5.3);
-                float trapDeHeight = 0; //_height / 3;
+                float trapDeHeight = _height -  (_height / 100 * 98);
                 // resize header
                 float[] src = new float[]{trapHeadLeft, trapDeHeight,
                         _width - trapHeadRight, trapDeHeight,
