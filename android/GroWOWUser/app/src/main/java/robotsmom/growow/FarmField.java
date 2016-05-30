@@ -17,6 +17,7 @@ public class FarmField
     private Owner owner;
     private Geo geo;
     private Address address;
+
     private ArrayList<FarmBed> farmBeds;
 
     public FarmField(JSONObject json)
@@ -39,6 +40,55 @@ public class FarmField
             e.printStackTrace();
         }
     }
+
+    public ArrayList<FarmBed> getFarmBeds() {
+        return farmBeds;
+    }
+
+    public void setFarmBeds(ArrayList<FarmBed> farmBeds) {
+        this.farmBeds = farmBeds;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Geo getGeo() {
+        return geo;
+    }
+
+    public void setGeo(Geo geo) {
+        this.geo = geo;
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFieldID() {
+        return fieldID;
+    }
+
+    public void setFieldID(String fieldID) {
+        this.fieldID = fieldID;
+    }
+
 }
 
 class Owner

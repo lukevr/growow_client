@@ -31,11 +31,11 @@ public class FarmBed
             // size
             JSONObject tmpObj = json.getJSONObject("size");
             width = BigDecimal.valueOf(tmpObj.getDouble("width")).floatValue();
-            height = BigDecimal.valueOf(tmpObj.getDouble("width")).floatValue();
+            height = BigDecimal.valueOf(tmpObj.getDouble("height")).floatValue();
             units = tmpObj.getString("units");
 
             // distortion
-            tmpObj = json.getJSONObject("distortion");
+            tmpObj = json.getJSONObject("distorsion");
             distorsion = new FarmBedDistorsion(tmpObj);
 
             // cells

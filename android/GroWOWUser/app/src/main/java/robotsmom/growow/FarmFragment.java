@@ -19,6 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Random;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -45,6 +49,7 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 //    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
 
     FarmBed _bed;
+    FarmField _field;
 
     private ServerAPIInterface apiService;
     private Subscription subscription;
@@ -57,6 +62,18 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         super.onCreate(savedInstanceState);
         apiService = new ApiService().getApi();
         _bed = new FarmBed(690, 450, vSource);
+
+        try {
+            JSONObject json = JSONLoader.getResourceConfiguration(R.raw.testfield, getContext());
+            _field = new FarmField(json.getJSONObject("field"));
+            _bed = _field.getFarmBeds().get(0);
+        } catch (IOException e)
+        {
+            Log.e(LOG_TAG, "Error reading config JSON");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
