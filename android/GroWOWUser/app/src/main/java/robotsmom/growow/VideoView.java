@@ -3,11 +3,8 @@ package robotsmom.growow;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -20,7 +17,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
-import android.widget.RelativeLayout;
 
 import java.io.IOException;
 
@@ -76,6 +72,12 @@ public class VideoView extends TextureView implements MediaPlayerControl{
     private Context mContext;
     private VideoStateListener videoStateListener;
 
+    public void setDistorsion(FarmFieldDistorsion distorsion) {
+        this._distorsion = distorsion;
+    }
+
+    private FarmFieldDistorsion _distorsion;
+
     public VideoView(final Context context, VideoStateListener vidStateListener) {
         super(context);
         mContext = context;
@@ -101,6 +103,7 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         videoWidth = 0;
         setFocusable(false);
         setSurfaceTextureListener(surfaceTextureListener);
+        _distorsion = new FarmFieldDistorsion();
     }
 
     public int resolveAdjustedSize(int desiredSize, int measureSpec) {
@@ -549,15 +552,16 @@ public class VideoView extends TextureView implements MediaPlayerControl{
 
             if( _resizeStream )
             {
-                float trapHeadLeft = (float)(_width / 4.8);
-                float trapHeadRight = (float)(_width / 5.3);
-                float trapDeHeight = _height -  (_height / 100 * 98);
+                Log.d(LOG_TAG, "Resize stream: _width/_height = " + _width + "/"+ _height +"; getWidth()/getHeight() = " + getWidth() +"/"+ getHeight());
                 // resize header
-                float[] src = new float[]{trapHeadLeft, trapDeHeight,
-                        _width - trapHeadRight, trapDeHeight,
-                        _width, _height,
-                        0, _height};
-                float[] dst = new float[]{0, 0, _width, 0, _width, _height, 0, _height};
+                float[] src = new float[]{     0 + _width * _distorsion.ltX,         0 + _height * _distorsion.ltY,
+                                          _width + (_width * _distorsion.rtX),       0 + _height * _distorsion.rtY,
+                                          _width + (_width * _distorsion.rbX), _height + (_height *_distorsion.rbY),
+                                               0 + _width * _distorsion.lbX,   _height + (_height * _distorsion.lbY)};
+                float[] dst = new float[]{  0, 0,
+                                            _width, 0,
+                                            _width, _height,
+                                            0, _height};
                 // resize footer
                 _matrix.setPolyToPoly(src, 0, dst, 0, 4);
             }

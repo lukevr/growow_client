@@ -1,15 +1,10 @@
 package robotsmom.growow;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PointF;
-import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Random;
 
 import retrofit2.adapter.rxjava.HttpException;
 import robotsmom.growow.restapi.ApiService;
@@ -48,8 +42,8 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
 //    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
 
-    FarmBed _bed;
     FarmField _field;
+    Farm _farm;
 
     private ServerAPIInterface apiService;
     private Subscription subscription;
@@ -61,12 +55,11 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     {
         super.onCreate(savedInstanceState);
         apiService = new ApiService().getApi();
-        _bed = new FarmBed(690, 450, vSource);
 
         try {
             JSONObject json = JSONLoader.getResourceConfiguration(R.raw.testfield, getContext());
-            _field = new FarmField(json.getJSONObject("field"));
-            _bed = _field.getFarmBeds().get(0);
+            _farm = new Farm(json.getJSONObject("farm"));
+            _field = _farm.getFarmFields().get(0);
         } catch (IOException e)
         {
             Log.e(LOG_TAG, "Error reading config JSON");
@@ -93,7 +86,8 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         mc.setEnabled(false);
 
         vidView = new VideoView(getContext(), this);
-        vidView.setVideoPath(_bed.getStreamURL());
+        vidView.setVideoPath(_field.getStreamURL());
+        vidView.setDistorsion(_field.getDistorsion());
         vidView.setMediaController(mc);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         vidView.setLayoutParams(params);
@@ -105,7 +99,7 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         circleProgress = (ProgressBar) view.findViewById(R.id.circleProgress);
         circleProgress.bringToFront();
 
-        intentVideoCall();
+//        intentVideoCall();
 
         return view;
     }
@@ -242,28 +236,32 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         Log.i(LOG_TAG, "Videostate was changed to: " + state);
         switch (state)
         {
-            case(VideoView.STATE_PREPARED):
+            case(VideoView.STATE_PLAYING):
             {
                 circleProgress.setVisibility(View.GONE);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                 vidView.setLayoutParams(params);
-                gridView = new FarmGridView(getContext());
-                gridView.setSurfaceTextureListener(this);
-                gridView.setOpaque(false);
-                gridView.setLeft(10);
-                gridView.setTop(10);
-                gridView.setLayoutParams(new FrameLayout.LayoutParams(vidView.getWidth(), vidView.getHeight(), FrameLayout.LayoutParams.MATCH_PARENT));
-                this.getView().setOnTouchListener(gridView);
-
-                // adding fake perspective to grid
-                gridView.setPerspective(0.f, 0.f, 0.f, .0f, .0f, .0f, .0f, .0f);
-                _containerView.addView(gridView);
                 // make container proportional to bed size
-                float bedAspect = _bed.getWidth() / _bed.getHeight();
+                float bedAspect = _field.getWidth() / _field.getHeight();
                 params = new RelativeLayout.LayoutParams((int)(_containerView.getHeight() * bedAspect),
                                                         _containerView.getHeight());
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 _containerView.setLayoutParams(params);
+
+//                gridView = new FarmGridView(getContext(), _field.getCells(), vidView.getWidth() / _field.getWidth(), vidView.getHeight() / _field.getHeight() );
+                gridView = new FarmGridView(getContext(), _field.getCells(), _containerView.getWidth() / _field.getWidth(), _containerView.getHeight() / _field.getHeight() );
+                gridView.setSurfaceTextureListener(this);
+                gridView.setOpaque(false);
+                gridView.setCells(_field.getCells());
+                gridView.setLayoutParams(new FrameLayout.LayoutParams(vidView.getWidth(), vidView.getHeight(), FrameLayout.LayoutParams.MATCH_PARENT));
+                this.getView().setOnTouchListener(gridView);
+                gridView.setFieldW(_field.getWidth());
+                gridView.setFieldH(_field.getHeight());
+                _containerView.addView(gridView);
+
+                Log.d(LOG_TAG, "Container size: " + _containerView.getWidth() + "x" + _containerView.getHeight());
+                Log.d(LOG_TAG, "Field size: " + _field.getWidth() + "x" + _field.getHeight());
+                Log.d(LOG_TAG, "Video view size: " + vidView.getWidth() + "x" + vidView.getHeight());
             }
         }
     }

@@ -108,7 +108,11 @@ public class FarmCell
     }
 
     public String description() {
-        return _description;
+        StringBuilder str = new StringBuilder();
+        for (int idx=0; idx < _plants.size(); idx++) {
+            str.append(_plants.get(idx).getPlantName() + "; ");
+        }
+        return str.toString();
     }
 
     public void setDescription(String description) {

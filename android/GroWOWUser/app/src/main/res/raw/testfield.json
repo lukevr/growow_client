@@ -1,5 +1,5 @@
 {
-	"field": {
+	"farm": {
 		"id": "1",
 		"name": "Test field",
 		"owner": {
@@ -16,23 +16,24 @@
 			"country": "Ukraine",
 			"city": "Kyiv"
 		},
-		"beds": [{
+		"fields": [{
 			"id": "1",
-			"streamURL": "rtsp://178.214.221.154:1935/live/myStream",
+			"timelapsURL": "rtsp://178.214.221.154:1935/live/myStream",
+			"liveURL": "rtsp://178.214.221.154:1935/live/StreamLapse",
 			"size": {
 				"units": "cm",
 				"width": "490",
 				"height": "450"
 			},
 			"distorsion": {
-				"leftTopX": "102.0",
-				"leftTopY": "22.5",
-				"rightTopX": "-102.0",
-				"rightTopY": "22.5",
-				"leftBottomX": "0",
-				"leftBottomY": "0",
+				"leftTopX": "0.2",
+				"leftTopY": "0.05",
+				"rightTopX": "-0.2",
+				"rightTopY": "0",
 				"rightBottomX": "0",
-				"rightBottomY": "0"
+				"rightBottomY": "-0.03",
+				"leftBottomX": "0",
+				"leftBottomY": "0"
 			},
 			"cells": [{
 					"id": "101",

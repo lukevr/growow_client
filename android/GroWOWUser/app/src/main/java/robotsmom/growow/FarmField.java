@@ -1,212 +1,104 @@
 package robotsmom.growow;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.TimeZone;
 
 /**
- * Created by rettpop on 16-05-30.
+ * Created by rettpop on 16-05-23.
  */
 public class FarmField
 {
-    private String fieldID;
-    private String name;
-    private Owner owner;
-    private Geo geo;
-    private Address address;
+    private int id;
+    private float width;
+    private float height;
+    private String units;
+    private String streamURL;
+    private String timelapsURL;
 
-    private ArrayList<FarmBed> farmBeds;
+    private ArrayList<FarmCell> cells;
+    private FarmFieldDistorsion distorsion;
 
     public FarmField(JSONObject json)
     {
         try {
             // properties
-            fieldID = json.getString("id");
-            name = json.getString("name");
-            owner = new Owner(json.getJSONObject("owner"));
-            geo = new Geo(json.getJSONObject("geo"));
-            address = new Address(json.getJSONObject("address"));
+            id = json.getInt("id");
+            streamURL = json.getString("liveURL");
+            timelapsURL = json.getString("timelapsURL");
 
-            // beds
-            farmBeds = new ArrayList<FarmBed>();
-            JSONArray bedsArr = json.getJSONArray("beds");
-            for (int idx = 0; idx < bedsArr.length(); idx++) {
-                farmBeds.add(new FarmBed(bedsArr.getJSONObject(idx)));
+            // size
+            JSONObject tmpObj = json.getJSONObject("size");
+            width = BigDecimal.valueOf(tmpObj.getDouble("width")).floatValue();
+            height = BigDecimal.valueOf(tmpObj.getDouble("height")).floatValue();
+            units = tmpObj.getString("units");
+
+            // distortion
+            tmpObj = json.getJSONObject("distorsion");
+            distorsion = new FarmFieldDistorsion(tmpObj);
+
+            // cells
+            cells = new ArrayList<FarmCell>();
+            JSONArray cellsArr = json.getJSONArray("cells");
+            for (int idx = 0; idx < cellsArr.length(); idx++) {
+                cells.add(new FarmCell(cellsArr.getJSONObject(idx)));
             }
-        } catch (JSONException e) {
+
+        }
+        catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<FarmBed> getFarmBeds() {
-        return farmBeds;
-    }
-
-    public void setFarmBeds(ArrayList<FarmBed> farmBeds) {
-        this.farmBeds = farmBeds;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public Geo getGeo() {
-        return geo;
-    }
-
-    public void setGeo(Geo geo) {
-        this.geo = geo;
-    }
-
-    public Owner getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFieldID() {
-        return fieldID;
-    }
-
-    public void setFieldID(String fieldID) {
-        this.fieldID = fieldID;
-    }
-
-}
-
-class Owner
-{
-    private String name;
-    private String URL;
-
-    public Owner(String name, String URL) {
-        this.name = name;
-        this.URL = URL;
-    }
-
-    public Owner(JSONObject json)
+    public FarmField(float width, float height, String streamURL)
     {
-        try {
-            this.setName(json.getString("name"));
-            this.setURL(json.getString("site"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        this.width = width;
+        this.height = height;
+        this.streamURL = streamURL;
     }
 
-    public String getURL() {
-        return URL;
+
+    public float getWidth() {
+        return width;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
+    public void setWidth(float width) {
+        this.width = width;
     }
 
-    public String getName() {
-        return name;
+    public float getHeight() {
+        return height;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHeight(float height) {
+        this.height = height;
     }
 
-}
-
-class Geo
-{
-    private double latitude;
-    private double longitude;
-    private String timeZone; //TODO: change to TimeZone later
-
-    public Geo(JSONObject json) {
-        try {
-            latitude = json.getDouble("latitude");
-            longitude = json.getDouble("longitude");
-            timeZone = json.getString("timezone");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public String getStreamURL() {
+        return streamURL;
     }
 
-    public Geo(double latitude, double longitude, String timeZone) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.timeZone = timeZone;
+    public void setStreamURL(String streamURL) {
+        this.streamURL = streamURL;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public FarmFieldDistorsion getDistorsion() {
+        return distorsion;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setDistorsion(FarmFieldDistorsion distorsion) {
+        this.distorsion = distorsion;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public ArrayList<FarmCell> getCells() {
+        return cells;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getTimeZone() {
-        return timeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
-}
-
-class Address
-{
-    private String country;
-    private String city;
-
-    public Address(String country, String city) {
-        this.country = country;
-        this.city = city;
-    }
-
-    public Address(JSONObject json) {
-        try {
-            this.country = json.getString("country");
-            this.city = json.getString("city");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
+    public String getTimelapsURL() {
+        return timelapsURL;
     }
 }

@@ -22,72 +22,64 @@ import java.util.ArrayList;
 public class FarmGridView extends TextureView implements View.OnTouchListener
 {
     private static final String LOG_TAG = "FarmGridView";
+
     private ArrayList<FarmCell> _cells;
+    private float _factorW, _factorH;
 
-    // coordinates of grid corners after skewing it inside of linear rectangle.
-    // To recalculate coordinates of cells and rest of stuff
-    private
-    PointF _perspectiveLT, // left top
-            _perspectiveRT, // right top
-            _perspectiveLB, // left bottom
-            _perspectiveRB; // right bottom
 
-    private float _maxShiftX;
-    private double _topAngleSin;
-    private double _bottomAngleSin;
+    private float _fieldW, _fieldH;
 
-    public FarmGridView(Context context) {
+    /**
+     * Sets field w.
+     *
+     * @param fieldW the field w
+     */
+    //TODO: Take scale factor not there but in container view.
+    public void setFieldW(float fieldW) {
+        this._fieldW = fieldW;
+    }
+
+    /**
+     * Sets field h.
+     *
+     * @param fieldH the field h
+     */
+    public void setFieldH(float fieldH) {
+        this._fieldH = fieldH;
+    }
+
+    /**
+     * Instantiates a new Farm grid view.
+     *
+     * @param context main activity context to draw some stuff
+     * @param cells   cells of the Bed to draw and tap them
+     * @param factorW scaling factor by width. To translate real measurments to screen
+     * @param factorH scaling factor by height. To translate real measurments to screen
+     */
+    public FarmGridView(Context context, ArrayList<FarmCell> cells, float factorW, float factorH)
+    {
         super(context);
+        _factorW = factorW;
+        _factorH = factorH;
+        _cells = cells;
     }
 
-    public FarmGridView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+//    public FarmGridView(Context context, AttributeSet attrs) {
+//        super(context, attrs);
+//    }
+//
+//    public FarmGridView(Context context, AttributeSet attrs, int defStyleAttr) {
+//        super(context, attrs, defStyleAttr);
+//    }
 
-    public FarmGridView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    // set perspective vertices of the grid.
-    // wanted to transform cells while drawing in accordance to camera position
-    // At the moment for the simplisity will assume that we have only isosceles trapezoid with bottom grid line as base
-    // So, will operate only with top horizontal shift. Y coordinate is assumed to not be changed
-    public void setPerspective(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3)
-    {
-        setPerspective(new PointF(x0, y0),
-                        new PointF(x1, y1),
-                        new PointF(x2, y2),
-                        new PointF(x3, y3)
-                );
-    }
-
-    public void setPerspective(PointF lt, PointF rt, PointF lb, PointF rb)
-    {
-        _perspectiveLT = lt;
-        _perspectiveRT = rt;
-        _perspectiveLB = lb;
-        _perspectiveRB = rb;
-
-    }
-
-    // projecting point from rectangular grid to perspectived
-    private PointF projectPoint(PointF point)
-    {
-        PointF newPoint = new PointF(point.x, point.y); // Y is not changed yet
-        double deltaX = _perspectiveLT.x - (point.y * _topAngleSin / _bottomAngleSin); // delta x for current Y
-
-        // if the point located before vertical grid center, add the delta. Otherwise subtract it.
-        if( point.x < this.getWidth()/2.f ) {
-            newPoint.offset((float) deltaX, 0);
-        }
-        else {
-            newPoint.offset((float) -deltaX, 0);
-        }
-
-        return newPoint;
-    }
-
-    // fills cells array with fake cells. Just for test
+    /**
+     * Fill cells array list.
+     *
+     * @param cols the cols
+     * @param rows the rows
+     * @return the array list
+     */
+// fills cells array with fake cells. Just for test
     public ArrayList<FarmCell> fillCells(int cols, int rows)
     {
         String[] vegetables = {"Carrot", "Tomato", "Berry", "Cucumber", "Ukrop", "Patison", "Corn", "Pumpkin"};
@@ -132,11 +124,11 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         Log.d(LOG_TAG, "this.locationOnScreen(" + gridLoc[0] + ", " + gridLoc[1] + ")");
 
         //drawGrid(this, 5, 3, event.getX(), event.getY());
-        if( null == _cells ) {
-            _cells = fillCells(5, 4);
-        }
+//        if( null == _cells ) {
+//            _cells = fillCells(5, 4);
+//        }
 
-        PointF point = new PointF(event.getX() - gridLoc[0] + viewLoc[0], event.getY() - gridLoc[1] + viewLoc[1]);
+        PointF point = new PointF((event.getX() - gridLoc[0] + viewLoc[0]) / _factorW, (event.getY() - gridLoc[1] + viewLoc[1]) / _factorH);
 
         Log.d(LOG_TAG, "point.Left(" + point.x + ", " + point.y + ")");
         // find touched cell
@@ -158,16 +150,15 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
     }
 
 
+    /**
+     * Draw cells.
+     *
+     * @param cells the cells
+     */
     public void drawCells(ArrayList<FarmCell> cells)
     {
         // do these calculations here for a while
-
-        // magical sinuses
-        Log.d(LOG_TAG, "this.H/W(" + this.getHeight() + "," + this.getWidth() + ")" );
-        double hypo = Math.sqrt( Math.pow(this.getHeight(), 2) + Math.pow(_perspectiveLT.x, 2) );
-        _topAngleSin = _perspectiveLT.x / hypo; // top angle sinus
-        _bottomAngleSin = Math.sin( (180 - 90) - Math.asin(_topAngleSin) ); // bottom angle sinus
-
+        Log.d(LOG_TAG, "Grid view size: " + this.getWidth() + "x" + this.getHeight());
 
         //=======================================================================================
 
@@ -177,9 +168,12 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         final float kInactiveCellBorderWidth = 5.f;
 
         Paint paint = new Paint();
-        paint.setTextSize(30.f);
+        paint.setTextSize(20.f);
         paint.setTextAlign(Paint.Align.CENTER);
         Rect textRect = new Rect();
+
+        _factorW = getWidth() / _fieldW;
+        _factorH = getHeight() / _fieldH;
 
         final Canvas canvas = this.lockCanvas();
         try
@@ -203,13 +197,13 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 PointF[] cellPoints = oneCell.points();
 
                 // move cursor to the top left point
-                PointF ppt = projectPoint(cellPoints[0]); // projected point
-                path.moveTo(ppt.x, ppt.y);
+                PointF ppt = cellPoints[0]; // projected point
+                path.moveTo(ppt.x * _factorW, ppt.y * _factorH);
 
                 //drawing lined in the counterclock direction to avoid additinal line from the last to the first point
                 for (int idx = cellPoints.length - 1; idx >= 0; idx--) {
-                    ppt = projectPoint(cellPoints[idx]);
-                    path.lineTo(ppt.x, ppt.y);
+                    ppt = cellPoints[idx];
+                    path.lineTo(ppt.x * _factorW, ppt.y * _factorH);
                 }
                 canvas.drawPath(path, paint);
 
@@ -218,8 +212,8 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 String descr = oneCell.description();
                 paint.getTextBounds(oneCell.description(), 0, descr.length(), textRect);
                 canvas.drawText(oneCell.description(),
-                        oneCell.left() + oneCell.width()/2,
-                        oneCell.bottom() - textRect.height(),
+                        (oneCell.left() + oneCell.width()/2) * _factorW,
+                        (oneCell.bottom() - textRect.height()) * _factorH,
                         paint);
             }
 
@@ -237,13 +231,13 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 path.reset();
                 PointF[] cellPoints = oneCell.points();
                 // move cursor to the top left point
-                PointF ppt = projectPoint(cellPoints[0]); // projected point
-                path.moveTo(ppt.x, ppt.y);
+                PointF ppt = cellPoints[0]; // projected point
+                path.moveTo(ppt.x * _factorW, ppt.y * _factorH);
 
                 //drawing lined in the counterclock direction to avoid additinal line from the last to the first point
                 for (int idx = cellPoints.length - 1; idx >= 0; idx--) {
-                    ppt = projectPoint(cellPoints[idx]);
-                    path.lineTo(ppt.x, ppt.y);
+                    ppt = cellPoints[idx];
+                    path.lineTo(ppt.x * _factorW, ppt.y * _factorH);
                 }
 
                 canvas.drawPath(path, paint);
@@ -253,8 +247,8 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 String descr = oneCell.description();
                 paint.getTextBounds(oneCell.description(), 0, descr.length(), textRect);
                 canvas.drawText(oneCell.description(),
-                        oneCell.left() + oneCell.width()/2,
-                        oneCell.bottom() - textRect.height(),
+                        (oneCell.left() + oneCell.width()/2) * _factorW,
+                        (oneCell.bottom() - textRect.height()) * _factorH,
                         paint);
             }
         }
@@ -263,9 +257,13 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         }
     }
 
-    public void drawGrid(FarmGridView txv, int cols, int rows, float selX, float selY)
-    {
-        _cells = fillCells(cols, rows);
-        drawCells(_cells);
+    /**
+     * Sets cells.
+     *
+     * @param cells the cells
+     */
+    public void setCells(ArrayList<FarmCell> cells) {
+        this._cells = cells;
     }
+
 }
