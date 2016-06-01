@@ -35,19 +35,16 @@ import rx.schedulers.Schedulers;
 public class FarmFragment extends Fragment implements TextureView.SurfaceTextureListener, VideoStateListener {
 
     private static final String LOG_TAG = "FarmFragment";
-    private RelativeLayout root;
-    private RelativeLayout _containerView;
-    private VideoView vidView;
-    private FarmGridView gridView;
-    private ProgressBar circleProgress;
-    private String vSource = "rtsp://178.214.221.154:1935/live/myStream";
-//    private String vSource = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
+    private RelativeLayout mRoot;
+    private RelativeLayout mContainerView;
+    private VideoView mVidView;
+    private FarmGridView mGridView;
+    private ProgressBar mCircleProgress;
+    FarmField mField;
+    Farm mFarm;
 
-    FarmField _field;
-    Farm _farm;
-
-    private ServerAPIInterface apiService;
-    private Subscription subscription;
+    private ServerAPIInterface mAPIService;
+    private Subscription mSubscription;
 
 //    private FarmFragment.RenderingThread mThread;
 
@@ -55,12 +52,12 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        apiService = new ApiService().getApi();
+        mAPIService = new ApiService().getApi();
 
         try {
             JSONObject json = JSONLoader.getResourceConfiguration(R.raw.testfield, getContext());
-            _farm = new Farm(json.getJSONObject("farm"));
-            _field = _farm.getFarmFields().get(0);
+            mFarm = new Farm(json.getJSONObject("farm"));
+            mField = mFarm.getFarmFields().get(0);
         } catch (IOException e)
         {
             Log.e(LOG_TAG, "Error reading config JSON");
@@ -75,45 +72,45 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.farm_view, container, false);
-        root = (RelativeLayout) view.findViewById(R.id.root_layout);
+        mRoot = (RelativeLayout) view.findViewById(R.id.root_layout);
 
         MediaController mc = new MediaController(getContext());
         mc.setEnabled(false);
 
-        vidView = new VideoView(getContext(), this);
-        vidView.setVideoPath(_field.getStreamURL());
-        vidView.setDistorsion(_field.getDistorsion());
-        vidView.setMediaController(mc);
+        mVidView = new VideoView(getContext(), this);
+        mVidView.setVideoPath(mField.getStreamURL());
+        mVidView.setDistorsion(mField.getDistorsion());
+        mVidView.setMediaController(mc);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        vidView.setLayoutParams(params);
+        mVidView.setLayoutParams(params);
 
-        _containerView = (RelativeLayout) view.findViewById(R.id.grid_container);
-        ViewTreeObserver vto = _containerView.getViewTreeObserver();
+        mContainerView = (RelativeLayout) view.findViewById(R.id.grid_container);
+        ViewTreeObserver vto = mContainerView.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
             @Override
             public void onGlobalLayout()
             {
-                Log.d("TEST", "Height = " + _containerView.getHeight() + " Width = " + _containerView.getWidth());
-                ViewTreeObserver obs = _containerView.getViewTreeObserver();
+                Log.d("TEST", "Height = " + mContainerView.getHeight() + " Width = " + mContainerView.getWidth());
+                ViewTreeObserver obs = mContainerView.getViewTreeObserver();
                 obs.removeOnGlobalLayoutListener(this);
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                _containerView.setLayoutParams(params);
+                mContainerView.setLayoutParams(params);
                 // make container proportional to bed size
-                float bedAspect = _field.getWidth() / _field.getHeight();
-                params = new RelativeLayout.LayoutParams((int)(_containerView.getHeight() * bedAspect), _containerView.getHeight());
+                float bedAspect = mField.getWidth() / mField.getHeight();
+                params = new RelativeLayout.LayoutParams((int)(mContainerView.getHeight() * bedAspect), mContainerView.getHeight());
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                _containerView.setLayoutParams(params);
+                mContainerView.setLayoutParams(params);
 
-                _containerView.addView(vidView);
-                vidView.start();
+                mContainerView.addView(mVidView);
+                mVidView.start();
             }
         });
 
 
-        circleProgress = (ProgressBar) view.findViewById(R.id.circleProgress);
-        circleProgress.bringToFront();
+        mCircleProgress = (ProgressBar) view.findViewById(R.id.circleProgress);
+        mCircleProgress.bringToFront();
 
 //        intentVideoCall();
 
@@ -123,10 +120,10 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 //    @Override
 //    public boolean onTouch(View view, MotionEvent event)
 //    {
-//        Log.d(LOG_TAG, "Got touch in (" + (event.getX() - gridView.getLeft()) + ", " + (event.getY() - gridView.getTop()) + ")");
+//        Log.d(LOG_TAG, "Got touch in (" + (event.getX() - mGridView.getLeft()) + ", " + (event.getY() - mGridView.getTop()) + ")");
 //        Log.d(LOG_TAG, "view.Left(" + view.getLeft() + "), Right(" + view.getRight() + ")" + ", Top(" + view.getTop() + ")");
-//        Log.d(LOG_TAG, "textureView.Left(" + gridView.getLeft() + "), Right(" + gridView.getRight() + ")" + ", Top(" + gridView.getTop() + ")");
-//        drawGrid(gridView, 5, 3, 1.f, 1.f);
+//        Log.d(LOG_TAG, "textureView.Left(" + mGridView.getLeft() + "), Right(" + mGridView.getRight() + ")" + ", Top(" + mGridView.getTop() + ")");
+//        drawGrid(mGridView, 5, 3, 1.f, 1.f);
 //
 //        return false;
 //    }
@@ -142,16 +139,16 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     @Override
     public void onDestroy()
     {
-        if(subscription != null)
-            subscription.unsubscribe();
-        apiService = null;
+        if(mSubscription != null)
+            mSubscription.unsubscribe();
+        mAPIService = null;
         super.onDestroy();
     }
 
 
     private void intentVideoCall() {
 
-        subscription = apiService
+        mSubscription = mAPIService
                 .intentVideo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<OKJson>() {
@@ -184,7 +181,7 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     private void stopVideoCall() {
 
-        subscription = apiService
+        mSubscription = mAPIService
                 .stopVideo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<OKJson>() {
@@ -224,11 +221,11 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-//        mThread = new RenderingThread(gridView);
+//        mThread = new RenderingThread(mGridView);
 //        mThread.start();
-        //gridView.drawGrid(gridView, 5, 4, .0f, .0f);
-        //vidView.setLayoutParams(new RelativeLayout.LayoutParams(height, height));
-        vidView.setViewScale(height, height);
+        //mGridView.drawGrid(mGridView, 5, 4, .0f, .0f);
+        //mVidView.setLayoutParams(new RelativeLayout.LayoutParams(height, height));
+        mVidView.setViewScale(height, height);
     }
 
     @Override
@@ -256,26 +253,26 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         {
             case(VideoView.STATE_PLAYING):
             {
-                circleProgress.setVisibility(View.GONE);
-                gridView = new FarmGridView(getContext(), _field.getCells(), _containerView.getWidth() / _field.getWidth(), _containerView.getHeight() / _field.getHeight() );
-                gridView.setSurfaceTextureListener(this);
-                gridView.setOpaque(false);
-                gridView.setCells(_field.getCells());
-                gridView.setLayoutParams(new FrameLayout.LayoutParams(vidView.getWidth(), vidView.getHeight(), FrameLayout.LayoutParams.MATCH_PARENT));
-                this.getView().setOnTouchListener(gridView);
-                gridView.setFieldW(_field.getWidth());
-                gridView.setFieldH(_field.getHeight());
-                _containerView.addView(gridView);
+                mCircleProgress.setVisibility(View.GONE);
+                mGridView = new FarmGridView(getContext(), mField.getCells(), mContainerView.getWidth() / mField.getWidth(), mContainerView.getHeight() / mField.getHeight() );
+                mGridView.setSurfaceTextureListener(this);
+                mGridView.setOpaque(false);
+                mGridView.setCells(mField.getCells());
+                mGridView.setLayoutParams(new FrameLayout.LayoutParams(mVidView.getWidth(), mVidView.getHeight(), FrameLayout.LayoutParams.MATCH_PARENT));
+                this.getView().setOnTouchListener(mGridView);
+                mGridView.setFieldW(mField.getWidth());
+                mGridView.setFieldH(mField.getHeight());
+                mContainerView.addView(mGridView);
 
-                Log.d(LOG_TAG, "Container size: " + _containerView.getWidth() + "x" + _containerView.getHeight());
-                Log.d(LOG_TAG, "Field size: " + _field.getWidth() + "x" + _field.getHeight());
-                Log.d(LOG_TAG, "Video view size: " + vidView.getWidth() + "x" + vidView.getHeight());
+                Log.d(LOG_TAG, "Container size: " + mContainerView.getWidth() + "x" + mContainerView.getHeight());
+                Log.d(LOG_TAG, "Field size: " + mField.getWidth() + "x" + mField.getHeight());
+                Log.d(LOG_TAG, "Video view size: " + mVidView.getWidth() + "x" + mVidView.getHeight());
             }
         }
     }
 
     public void setResizeStream(boolean resizeStream) {
-        vidView.setResizeStream(resizeStream);
+        mVidView.setResizeStream(resizeStream);
     }
 
 //    private static class RenderingThread extends Thread

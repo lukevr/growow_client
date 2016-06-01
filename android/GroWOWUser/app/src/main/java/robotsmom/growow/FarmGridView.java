@@ -8,7 +8,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.TextureView;
@@ -23,11 +22,11 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
 {
     private static final String LOG_TAG = "FarmGridView";
 
-    private ArrayList<FarmCell> _cells;
-    private float _factorW, _factorH;
+    private ArrayList<FarmCell> mCells;
+    private float mFactorW, mFactorH;
 
 
-    private float _fieldW, _fieldH;
+    private float mFieldW, mFieldH;
 
     /**
      * Sets field w.
@@ -36,7 +35,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
      */
     //TODO: Take scale factor not there but in container view.
     public void setFieldW(float fieldW) {
-        this._fieldW = fieldW;
+        this.mFieldW = fieldW;
     }
 
     /**
@@ -45,7 +44,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
      * @param fieldH the field h
      */
     public void setFieldH(float fieldH) {
-        this._fieldH = fieldH;
+        this.mFieldH = fieldH;
     }
 
     /**
@@ -59,9 +58,9 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
     public FarmGridView(Context context, ArrayList<FarmCell> cells, float factorW, float factorH)
     {
         super(context);
-        _factorW = factorW;
-        _factorH = factorH;
-        _cells = cells;
+        mFactorW = factorW;
+        mFactorH = factorH;
+        mCells = cells;
     }
 
 //    public FarmGridView(Context context, AttributeSet attrs) {
@@ -124,15 +123,15 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         Log.d(LOG_TAG, "this.locationOnScreen(" + gridLoc[0] + ", " + gridLoc[1] + ")");
 
         //drawGrid(this, 5, 3, event.getX(), event.getY());
-//        if( null == _cells ) {
-//            _cells = fillCells(5, 4);
+//        if( null == mCells ) {
+//            mCells = fillCells(5, 4);
 //        }
 
-        PointF point = new PointF((event.getX() - gridLoc[0] + viewLoc[0]) / _factorW, (event.getY() - gridLoc[1] + viewLoc[1]) / _factorH);
+        PointF point = new PointF((event.getX() - gridLoc[0] + viewLoc[0]) / mFactorW, (event.getY() - gridLoc[1] + viewLoc[1]) / mFactorH);
 
         Log.d(LOG_TAG, "point.Left(" + point.x + ", " + point.y + ")");
         // find touched cell
-        for (FarmCell oneCell:_cells)
+        for (FarmCell oneCell: mCells)
         {
             if( oneCell.containsPoint(point) )
             {
@@ -144,7 +143,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
             }
         }
 
-        drawCells(_cells);
+        drawCells(mCells);
 
         return true;
     }
@@ -172,8 +171,8 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         paint.setTextAlign(Paint.Align.CENTER);
         Rect textRect = new Rect();
 
-        _factorW = getWidth() / _fieldW;
-        _factorH = getHeight() / _fieldH;
+        mFactorW = getWidth() / mFieldW;
+        mFactorH = getHeight() / mFieldH;
 
         final Canvas canvas = this.lockCanvas();
         try
@@ -198,12 +197,12 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
 
                 // move cursor to the top left point
                 PointF ppt = cellPoints[0]; // projected point
-                path.moveTo(ppt.x * _factorW, ppt.y * _factorH);
+                path.moveTo(ppt.x * mFactorW, ppt.y * mFactorH);
 
                 //drawing lined in the counterclock direction to avoid additinal line from the last to the first point
                 for (int idx = cellPoints.length - 1; idx >= 0; idx--) {
                     ppt = cellPoints[idx];
-                    path.lineTo(ppt.x * _factorW, ppt.y * _factorH);
+                    path.lineTo(ppt.x * mFactorW, ppt.y * mFactorH);
                 }
                 canvas.drawPath(path, paint);
 
@@ -212,8 +211,8 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 String descr = oneCell.description();
                 paint.getTextBounds(oneCell.description(), 0, descr.length(), textRect);
                 canvas.drawText(oneCell.description(),
-                        (oneCell.left() + oneCell.width()/2) * _factorW,
-                        (oneCell.bottom() - textRect.height()) * _factorH,
+                        (oneCell.left() + oneCell.width()/2) * mFactorW,
+                        (oneCell.bottom() - textRect.height()) * mFactorH,
                         paint);
             }
 
@@ -232,12 +231,12 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 PointF[] cellPoints = oneCell.points();
                 // move cursor to the top left point
                 PointF ppt = cellPoints[0]; // projected point
-                path.moveTo(ppt.x * _factorW, ppt.y * _factorH);
+                path.moveTo(ppt.x * mFactorW, ppt.y * mFactorH);
 
                 //drawing lined in the counterclock direction to avoid additinal line from the last to the first point
                 for (int idx = cellPoints.length - 1; idx >= 0; idx--) {
                     ppt = cellPoints[idx];
-                    path.lineTo(ppt.x * _factorW, ppt.y * _factorH);
+                    path.lineTo(ppt.x * mFactorW, ppt.y * mFactorH);
                 }
 
                 canvas.drawPath(path, paint);
@@ -247,8 +246,8 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 String descr = oneCell.description();
                 paint.getTextBounds(oneCell.description(), 0, descr.length(), textRect);
                 canvas.drawText(oneCell.description(),
-                        (oneCell.left() + oneCell.width()/2) * _factorW,
-                        (oneCell.bottom() - textRect.height()) * _factorH,
+                        (oneCell.left() + oneCell.width()/2) * mFactorW,
+                        (oneCell.bottom() - textRect.height()) * mFactorH,
                         paint);
             }
         }
@@ -263,7 +262,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
      * @param cells the cells
      */
     public void setCells(ArrayList<FarmCell> cells) {
-        this._cells = cells;
+        this.mCells = cells;
     }
 
 }

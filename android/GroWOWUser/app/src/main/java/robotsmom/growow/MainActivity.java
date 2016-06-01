@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity
 
     private FarmFragment farmFragment;
     private StatFragment statFragment = new StatFragment();
-    private boolean _resizeStream = true;
+    private boolean mResizeStream = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity
         trap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                _resizeStream = !_resizeStream;
-                farmFragment.setResizeStream(_resizeStream);
+                mResizeStream = !mResizeStream;
+                farmFragment.setResizeStream(mResizeStream);
             }
         });
 
