@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:layoutMode="opticalBounds"
         android:padding="1dp"
-        android:background="#e62020"
+        android:background="#13a608"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
@@ -29,15 +29,12 @@
 
     </RelativeLayout>
 
-    <EditText
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/circleProgress" />
+        android:id="@+id/listView"
+        android:layout_below="@+id/editText"
+        android:layout_toLeftOf="@+id/grid_container"
+        android:layout_toStartOf="@+id/grid_container" />
 
 </RelativeLayout>

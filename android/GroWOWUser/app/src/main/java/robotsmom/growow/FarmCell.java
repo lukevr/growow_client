@@ -6,26 +6,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by rettpop on 16-05-04.
  */
 public class FarmCell
 {
-    private int _id;
-    private float _left;
-    private float _top;
-    private float _width;
-    private float _height;
-    private boolean _isSelected = false;
-    private boolean _isActive = true;
-    private String _description = null;
-    private String _type = null;
+    private int mId;
+    private float mLeft;
+    private float mTop;
+    private float mWidth;
+    private float mHeight;
+    private boolean mIsSelected = false;
+    private boolean mIsActive = true;
+    private String mDescription = null;
+    private String mType = null;
     private ArrayList<FarmPlant> _plants;
 
     public FarmCell(JSONObject json)
@@ -33,13 +30,13 @@ public class FarmCell
         try
         {
             // properties
-            _id = json.getInt("id");
-            _left = BigDecimal.valueOf(json.getDouble("x")).floatValue();
-            _top = BigDecimal.valueOf(json.getDouble("y")).floatValue();
-            _width = BigDecimal.valueOf(json.getDouble("width")).floatValue();
-            _height = BigDecimal.valueOf(json.getDouble("height")).floatValue();
-            _isActive = json.getBoolean("isActive");
-            _type = json.getString("type");
+            mId = json.getInt("id");
+            mLeft = BigDecimal.valueOf(json.getDouble("x")).floatValue();
+            mTop = BigDecimal.valueOf(json.getDouble("y")).floatValue();
+            mWidth = BigDecimal.valueOf(json.getDouble("width")).floatValue();
+            mHeight = BigDecimal.valueOf(json.getDouble("height")).floatValue();
+            mIsActive = json.getBoolean("isActive");
+            mType = json.getString("type");
 
             // filling plants array
             _plants = new ArrayList<FarmPlant>();
@@ -54,57 +51,57 @@ public class FarmCell
     }
 
     public FarmCell(float left, float top, float width, float height) {
-        this._left = left;
-        this._top = top;
-        this._width = width;
-        this._height = height;
+        this.mLeft = left;
+        this.mTop = top;
+        this.mWidth = width;
+        this.mHeight = height;
     }
 
     public boolean containsPoint(PointF point)
     {
-        return     (point.x > _left && point.x < _left + _width)
-                && (point.y > _top && point.y < _top + _height);
+        return     (point.x > mLeft && point.x < mLeft + mWidth)
+                && (point.y > mTop && point.y < mTop + mHeight);
     }
 
     // Accessors
     public boolean isSelected() {
-        return _isSelected;
+        return mIsSelected;
     }
 
     public void setSelected(boolean selected) {
-        _isSelected = selected;
+        mIsSelected = selected;
     }
 
     public float height() {
-        return _height;
+        return mHeight;
     }
 
     public void setHeight(float height) {
-        this._height = height;
+        this.mHeight = height;
     }
 
     public float width() {
-        return _width;
+        return mWidth;
     }
 
     public void setWidth(float width) {
-        this._width = width;
+        this.mWidth = width;
     }
 
     public float top() {
-        return _top;
+        return mTop;
     }
 
     public void setTop(float top) {
-        this._top = top;
+        this.mTop = top;
     }
 
     public float left() {
-        return _left;
+        return mLeft;
     }
 
     public void setLeft(float left) {
-        this._left = left;
+        this.mLeft = left;
     }
 
     public String description() {
@@ -116,17 +113,17 @@ public class FarmCell
     }
 
     public void setDescription(String description) {
-        this._description = description;
+        this.mDescription = description;
     }
 
     public float right()
     {
-        return _left + _width;
+        return mLeft + mWidth;
     }
 
     public float bottom()
     {
-        return _top + _height;
+        return mTop + mHeight;
     }
 
     public PointF[] points()
@@ -134,10 +131,10 @@ public class FarmCell
         // At the moment we have only 4 points per cell.
         // But later we can make 5, 6, or even ✡ like cells.
         // For farm nerds.
-        PointF lt = new PointF(_left, _top);
-        PointF rt = new PointF(right(), _top);
+        PointF lt = new PointF(mLeft, mTop);
+        PointF rt = new PointF(right(), mTop);
         PointF rb = new PointF(right(), bottom());
-        PointF lb = new PointF(_left, bottom());
+        PointF lb = new PointF(mLeft, bottom());
 
         return (new PointF[]{lt, rt, rb, lb});
     }

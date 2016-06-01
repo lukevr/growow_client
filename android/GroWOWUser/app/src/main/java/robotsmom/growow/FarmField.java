@@ -29,7 +29,7 @@ public class FarmField
             // properties
             id = json.getInt("id");
             streamURL = json.getString("liveURL");
-            timelapsURL = json.getString("timelapsURL");
+            timelapsURL = json.getString("timelapseURL");
 
             // size
             JSONObject tmpObj = json.getJSONObject("size");

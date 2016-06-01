@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
@@ -70,12 +71,6 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        Log.d(LOG_TAG, "Vew created with container size: " + _containerView.getWidth() + "x" + _containerView.getHeight());
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -93,8 +88,29 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         vidView.setLayoutParams(params);
 
         _containerView = (RelativeLayout) view.findViewById(R.id.grid_container);
-        _containerView.addView(vidView);
-        vidView.start();
+        ViewTreeObserver vto = _containerView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                Log.d("TEST", "Height = " + _containerView.getHeight() + " Width = " + _containerView.getWidth());
+                ViewTreeObserver obs = _containerView.getViewTreeObserver();
+                obs.removeOnGlobalLayoutListener(this);
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                _containerView.setLayoutParams(params);
+                // make container proportional to bed size
+                float bedAspect = _field.getWidth() / _field.getHeight();
+                params = new RelativeLayout.LayoutParams((int)(_containerView.getHeight() * bedAspect), _containerView.getHeight());
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                _containerView.setLayoutParams(params);
+
+                _containerView.addView(vidView);
+                vidView.start();
+            }
+        });
+
 
         circleProgress = (ProgressBar) view.findViewById(R.id.circleProgress);
         circleProgress.bringToFront();
@@ -119,13 +135,15 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     @Override
     public void onStop() {
-        stopVideoCall();
+//        stopVideoCall();
         super.onStop();
     }
 
     @Override
-    public void onDestroy() {
-        subscription.unsubscribe();
+    public void onDestroy()
+    {
+        if(subscription != null)
+            subscription.unsubscribe();
         apiService = null;
         super.onDestroy();
     }
@@ -239,16 +257,6 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
             case(VideoView.STATE_PLAYING):
             {
                 circleProgress.setVisibility(View.GONE);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                vidView.setLayoutParams(params);
-                // make container proportional to bed size
-                float bedAspect = _field.getWidth() / _field.getHeight();
-                params = new RelativeLayout.LayoutParams((int)(_containerView.getHeight() * bedAspect),
-                                                        _containerView.getHeight());
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                _containerView.setLayoutParams(params);
-
-//                gridView = new FarmGridView(getContext(), _field.getCells(), vidView.getWidth() / _field.getWidth(), vidView.getHeight() / _field.getHeight() );
                 gridView = new FarmGridView(getContext(), _field.getCells(), _containerView.getWidth() / _field.getWidth(), _containerView.getHeight() / _field.getHeight() );
                 gridView.setSurfaceTextureListener(this);
                 gridView.setOpaque(false);

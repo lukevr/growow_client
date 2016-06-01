@@ -294,6 +294,8 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         @Override
         public void onVideoSizeChanged(final MediaPlayer mp, final int width, final int height) {
             Log.d(LOG_TAG, "Video size changed " + width + '/' + height + " number " + number);
+
+            surfaceTextureListener.setResizeStream(true);
         }
     };
 
@@ -554,8 +556,8 @@ public class VideoView extends TextureView implements MediaPlayerControl{
             {
                 Log.d(LOG_TAG, "Resize stream: _width/_height = " + _width + "/"+ _height +"; getWidth()/getHeight() = " + getWidth() +"/"+ getHeight());
                 // resize header
-                float[] src = new float[]{     0 + _width * _distorsion.ltX,         0 + _height * _distorsion.ltY,
-                                          _width + (_width * _distorsion.rtX),       0 + _height * _distorsion.rtY,
+                float[] src = new float[]{     0 + getWidth() * _distorsion.ltX,         0 + getHeight() * _distorsion.ltY,
+                                          getWidth() + (getWidth() * _distorsion.rtX),       0 + getHeight() * _distorsion.rtY,
                                           _width + (_width * _distorsion.rbX), _height + (_height *_distorsion.rbY),
                                                0 + _width * _distorsion.lbX,   _height + (_height * _distorsion.lbY)};
                 float[] dst = new float[]{  0, 0,
