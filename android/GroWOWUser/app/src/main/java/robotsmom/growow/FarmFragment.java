@@ -46,7 +46,6 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     private ServerAPIInterface mAPIService;
     private Subscription mSubscription;
 
-//    private FarmFragment.RenderingThread mThread;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -116,19 +115,6 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
         return view;
     }
-
-//    @Override
-//    public boolean onTouch(View view, MotionEvent event)
-//    {
-//        Log.d(LOG_TAG, "Got touch in (" + (event.getX() - mGridView.getLeft()) + ", " + (event.getY() - mGridView.getTop()) + ")");
-//        Log.d(LOG_TAG, "view.Left(" + view.getLeft() + "), Right(" + view.getRight() + ")" + ", Top(" + view.getTop() + ")");
-//        Log.d(LOG_TAG, "textureView.Left(" + mGridView.getLeft() + "), Right(" + mGridView.getRight() + ")" + ", Top(" + mGridView.getTop() + ")");
-//        drawGrid(mGridView, 5, 3, 1.f, 1.f);
-//
-//        return false;
-//    }
-//
-
 
     @Override
     public void onStop() {
@@ -221,10 +207,6 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-//        mThread = new RenderingThread(mGridView);
-//        mThread.start();
-        //mGridView.drawGrid(mGridView, 5, 4, .0f, .0f);
-        //mVidView.setLayoutParams(new RelativeLayout.LayoutParams(height, height));
         mVidView.setViewScale(height, height);
     }
 
@@ -235,8 +217,7 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-//        if (mThread != null)
-//            mThread.stopRendering();
+        Log.i(LOG_TAG, "onSurfaceTextureDestroyed");
         return true;
     }
 
@@ -258,10 +239,9 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
                 mGridView.setSurfaceTextureListener(this);
                 mGridView.setOpaque(false);
                 mGridView.setCells(mField.getCells());
+                mGridView.setFieldSize(mField.getWidth(), mField.getHeight());
                 mGridView.setLayoutParams(new FrameLayout.LayoutParams(mVidView.getWidth(), mVidView.getHeight(), FrameLayout.LayoutParams.MATCH_PARENT));
                 this.getView().setOnTouchListener(mGridView);
-                mGridView.setFieldW(mField.getWidth());
-                mGridView.setFieldH(mField.getHeight());
                 mContainerView.addView(mGridView);
 
                 Log.d(LOG_TAG, "Container size: " + mContainerView.getWidth() + "x" + mContainerView.getHeight());
@@ -274,65 +254,5 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
     public void setResizeStream(boolean resizeStream) {
         mVidView.setResizeStream(resizeStream);
     }
-
-//    private static class RenderingThread extends Thread
-//    {
-//        private final FarmGridView mSurface;
-//        private volatile boolean mRunning = true;
-//
-//        public RenderingThread(FarmGridView surface) {
-//            mSurface = surface;
-//        }
-//
-//        @Override
-//        public void run()
-//        {
-//            Random rnd =  new Random(23);
-//            float x = (float)rnd.nextInt(mSurface.getWidth());
-//            float y = (float)rnd.nextInt(mSurface.getHeight());
-//
-//            float speedX = (float)rnd.nextInt(10);//5.0f;
-//            float speedY = (float)rnd.nextInt(10);//3.0f;
-//
-//            float deltaX = 20.f;
-//            float deltaY = 20.f;
-//
-//            Paint paint = new Paint();
-//            paint.setColor(0xff00ff00);
-//
-//            while (mRunning && !Thread.interrupted())
-//            {
-//                final Canvas canvas = mSurface.lockCanvas(null);
-//                try {
-//                    canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
-//                    canvas.drawRect(x, y, x + deltaX, y + deltaY, paint);
-//                } finally {
-//                    mSurface.unlockCanvasAndPost(canvas);
-//                }
-//
-//                if (x + deltaX + speedX >= mSurface.getWidth() || x + speedX <= 0.0f) {
-//                    speedX = -speedX;
-//                }
-//                if (y + deltaY + speedY >= mSurface.getHeight() || y + speedY <= 0.0f) {
-//                    speedY = -speedY;
-//                }
-//
-//                x += speedX;
-//                y += speedY;
-//
-//                try {
-//                    Thread.sleep(15);
-//                } catch (InterruptedException e) {
-//                    // Interrupted
-//                }
-//            }
-//        }
-//
-//        void stopRendering() {
-//            interrupt();
-//            mRunning = false;
-//        }
-//    }
-
 
 }

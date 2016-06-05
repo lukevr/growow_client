@@ -24,27 +24,12 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
 
     private ArrayList<FarmCell> mCells;
     private float mFactorW, mFactorH;
-
-
     private float mFieldW, mFieldH;
 
-    /**
-     * Sets field w.
-     *
-     * @param fieldW the field w
-     */
-    //TODO: Take scale factor not there but in container view.
-    public void setFieldW(float fieldW) {
-        this.mFieldW = fieldW;
-    }
-
-    /**
-     * Sets field h.
-     *
-     * @param fieldH the field h
-     */
-    public void setFieldH(float fieldH) {
-        this.mFieldH = fieldH;
+    public void setFieldSize(float width, float height)
+    {
+        this.mFieldW = width;
+        this.mFieldH = height;
     }
 
     /**
@@ -63,49 +48,6 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         mCells = cells;
     }
 
-//    public FarmGridView(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//    }
-//
-//    public FarmGridView(Context context, AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//    }
-
-    /**
-     * Fill cells array list.
-     *
-     * @param cols the cols
-     * @param rows the rows
-     * @return the array list
-     */
-// fills cells array with fake cells. Just for test
-    public ArrayList<FarmCell> fillCells(int cols, int rows)
-    {
-        String[] vegetables = {"Carrot", "Tomato", "Berry", "Cucumber", "Ukrop", "Patison", "Corn", "Pumpkin"};
-        ArrayList<FarmCell> cells = new ArrayList<FarmCell>();
-        float gridWidth = this.getWidth();
-        float gridHeight = this.getHeight();
-
-        float cellWidth = gridWidth / cols;
-        float cellHeight = gridHeight / rows;
-
-        for(int idr = 0; idr < rows; idr++)
-        {
-            for(int idc = 0; idc < cols; idc++)
-            {
-                FarmCell newCell = new FarmCell(idc * cellWidth, idr * cellHeight, cellWidth, cellHeight);
-
-                // add random description
-                int descrIdx = (int) (Math.random() * vegetables.length);
-                newCell.setDescription(vegetables[descrIdx]);
-
-                cells.add(newCell);
-            }
-        }
-
-        return cells;
-    }
-
     @Override
     public boolean onTouch(View view, MotionEvent event)
     {
@@ -121,11 +63,6 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         this.getLocationOnScreen(gridLoc);
         view.getLocationOnScreen(viewLoc);
         Log.d(LOG_TAG, "this.locationOnScreen(" + gridLoc[0] + ", " + gridLoc[1] + ")");
-
-        //drawGrid(this, 5, 3, event.getX(), event.getY());
-//        if( null == mCells ) {
-//            mCells = fillCells(5, 4);
-//        }
 
         PointF point = new PointF((event.getX() - gridLoc[0] + viewLoc[0]) / mFactorW, (event.getY() - gridLoc[1] + viewLoc[1]) / mFactorH);
 
@@ -156,11 +93,6 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
      */
     public void drawCells(ArrayList<FarmCell> cells)
     {
-        // do these calculations here for a while
-        Log.d(LOG_TAG, "Grid view size: " + this.getWidth() + "x" + this.getHeight());
-
-        //=======================================================================================
-
         final int kActiveCellBorderColor = Color.RED;
         final float kActiveCellBorderWidth = 10.f;
         final int kInactiveCellBorderColor = Color.GREEN;

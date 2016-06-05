@@ -33,7 +33,7 @@ public class VideoView extends TextureView implements MediaPlayerControl{
     public static final int STATE_PAUSED             = 4;
     public static final int STATE_PLAYBACK_COMPLETED = 5;
 
-    public int number;
+    private int number;
 
     // currentState is a VideoView object's current state.
     // targetState is the state that a method caller intends to reach.
@@ -47,8 +47,6 @@ public class VideoView extends TextureView implements MediaPlayerControl{
     private MediaPlayer mediaPlayer;
     private int videoWidth;
     private int videoHeight;
-    private int surfaceWidth;
-    private int surfaceHeight;
     private int audioSession;
     private SurfaceTexture surfaceTexture;
     private Surface surface;
@@ -71,6 +69,8 @@ public class VideoView extends TextureView implements MediaPlayerControl{
 
     private Context mContext;
     private VideoStateListener videoStateListener;
+
+
 
     public void setDistorsion(FarmFieldDistorsion distorsion) {
         this._distorsion = distorsion;
@@ -236,7 +236,6 @@ public class VideoView extends TextureView implements MediaPlayerControl{
         }
         Log.d(LOG_TAG, "Setting size: " + width + '/' + height + " for number " + number);
         setMeasuredDimension((int)(width * widthScale), (int)(height * heightScale));
-//        setMeasuredDimension((int)(height * heightScale), (int)(height * heightScale));
     }
 
     // Listeners
@@ -589,8 +588,6 @@ public class VideoView extends TextureView implements MediaPlayerControl{
             if( STATE_PLAYING == targetState ) {
                 return;
             }
-            surfaceWidth = width;
-            surfaceHeight = height;
             boolean isValidState =  (targetState == STATE_PLAYING);
             boolean hasValidSize = (videoWidth == width && videoHeight == height);
             if (mediaPlayer != null && isValidState && hasValidSize) {
