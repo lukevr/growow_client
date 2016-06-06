@@ -53,17 +53,8 @@ public class FarmFragment extends Fragment implements TextureView.SurfaceTexture
         super.onCreate(savedInstanceState);
         mAPIService = new ApiService().getApi();
 
-        try {
-            JSONObject json = JSONLoader.getResourceConfiguration(R.raw.testfield, getContext());
-            mFarm = new Farm(json.getJSONObject("farm"));
-            mField = mFarm.getFarmFields().get(0);
-        } catch (IOException e)
-        {
-            Log.e(LOG_TAG, "Error reading config JSON");
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mFarm = ConfigHelper.getInstance().getFarms().get(0); // taking just first farm at the moment
+        mField = mFarm.getFarmFields().get(0);
     }
 
     @Override

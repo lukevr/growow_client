@@ -1,5 +1,6 @@
 package robotsmom.growow;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -10,24 +11,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FarmsListFragment.OnFragmentInteractionListener {
 
 
+    private static final String LOG_TAG = "MainActivity";
     private FarmFragment farmFragment;
+    private FarmsListFragment mFarmsListFragment;
     private StatFragment statFragment = new StatFragment();
     private boolean mResizeStream = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        Log.d(LOG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +65,9 @@ public class MainActivity extends AppCompatActivity
 
         // default menu item
         navigationView.getMenu().getItem(0).setChecked(true);
-//        onNavigationItemSelected(navigationView.getMenu().getItem(0));
-        onNavigationItemSelected(navigationView.getMenu().getItem(1));
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+//        onNavigationItemSelected(navigationView.getMenu().getItem(1));
+        Log.d(LOG_TAG, "onCreate finish");
     }
 
     @Override
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(LOG_TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -81,11 +90,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(LOG_TAG, "onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -98,14 +107,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Log.d(LOG_TAG, "onNavigationItemSelected");
         int id = item.getItemId();
 
-        if (id == R.id.nav_statistics) {
+        if (id == R.id.nav_statistics)
+        {
+            if( mFarmsListFragment == null )
+            {
+                mFarmsListFragment = new FarmsListFragment();
+            }
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, statFragment);
+//            ft.replace(R.id.mainFrame, statFragment);
+            ft.replace(R.id.mainFrame, mFarmsListFragment);
             ft.commit();
 
-        } else if (id == R.id.nav_camera) {
+        }
+        else if (id == R.id.nav_camera)
+        {
             if(farmFragment == null)
                 farmFragment = new FarmFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -122,6 +140,12 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        Log.d(LOG_TAG, "onNavigationItemSelected finish");
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

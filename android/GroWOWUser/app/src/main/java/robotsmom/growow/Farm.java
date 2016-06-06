@@ -205,6 +205,11 @@ class Address
         return city;
     }
 
+    @Override
+    public String toString() {
+        return city + ", " + country;
+    }
+
     public void setCity(String city) {
         this.city = city;
     }

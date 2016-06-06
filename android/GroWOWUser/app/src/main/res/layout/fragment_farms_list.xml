@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false">
+
+    <ExpandableListView
+        android:id="@+id/farmsList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".50"
+        />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".50"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/farmsListDetailFarmName"
+                android:text="Farm name:"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/farmsListDetailFarmerName"
+                android:text="Farmer name:"
+                android:layout_below="@+id/farmsListDetailFarmName" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/farmsListDetailFarmSite"
+                android:text="Site:"
+                android:layout_below="@+id/farmsListDetailFarmerName" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/farmsListDetailFarmRaiting"
+                android:text="Raiting:"
+                android:layout_below="@+id/farmsListDetailFarmSite" />
+
+            <ImageView
+                android:id="@+id/farmsListDetailFarmLogo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+</LinearLayout>

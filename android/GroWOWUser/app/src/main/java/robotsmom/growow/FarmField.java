@@ -101,4 +101,9 @@ public class FarmField
     public String getTimelapsURL() {
         return timelapsURL;
     }
+
+    public int getId() {
+        return id;
+    }
+
 }
