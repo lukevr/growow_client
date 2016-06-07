@@ -13,6 +13,8 @@ public class Farm
 {
     private String fieldID;
     private String name;
+    private String site;
+    private int raiting;
     private Owner owner;
     private Geo geo;
     private Address address;
@@ -25,6 +27,8 @@ public class Farm
             // properties
             fieldID = json.getString("id");
             name = json.getString("name");
+            site = json.getString("site");
+            raiting = json.getInt("raiting");
             owner = new Owner(json.getJSONObject("owner"));
             geo = new Geo(json.getJSONObject("geo"));
             address = new Address(json.getJSONObject("address"));
@@ -88,6 +92,13 @@ public class Farm
         this.fieldID = fieldID;
     }
 
+    public String getSite() {
+        return site;
+    }
+
+    public int getRaiting() {
+        return raiting;
+    }
 }
 
 class Owner

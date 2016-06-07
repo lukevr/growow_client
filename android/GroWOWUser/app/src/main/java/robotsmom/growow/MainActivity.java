@@ -1,6 +1,5 @@
 package robotsmom.growow;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -119,6 +118,7 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //            ft.replace(R.id.mainFrame, statFragment);
             ft.replace(R.id.mainFrame, mFarmsListFragment);
+            ft.addToBackStack("Farms list");
             ft.commit();
 
         }
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity
                 farmFragment = new FarmFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, farmFragment);
+            ft.addToBackStack("Field view");
             ft.commit();
 
         } else if (id == R.id.nav_manage) {
@@ -140,12 +141,18 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        Log.d(LOG_TAG, "onNavigationItemSelected finish");
         return true;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
+    /**
+     * @param groupPosition
+     * @param childPosition
+     */
+    @Override
+    public void onFragmentInteraction(int groupPosition, int childPosition)
+    {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        onNavigationItemSelected(navigationView.getMenu().getItem(1));
     }
 }

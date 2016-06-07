@@ -3,18 +3,12 @@ package robotsmom.growow;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by rettpop on 16-06-06.
@@ -112,7 +106,7 @@ public class FarmsListAdapter extends BaseExpandableListAdapter
         TextView cellsAvailable = (TextView) convertView.findViewById(R.id.farmsListChildCellsAvailable);
         TextView userCells = (TextView) convertView.findViewById(R.id.farmsListChildUsersCells);
 
-        fieldID.setText("" + field.getId());
+        fieldID.setText("Field ID: " + field.getId());
         //TODO:Distinguish cells overall and not occupied
         cellsAvailable.setText("Cells available: " + field.getCells().size());
         userCells.setText("User' cells" + field.getCells().size());
