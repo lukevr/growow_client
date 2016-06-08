@@ -107,9 +107,11 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
     public void drawCells(ArrayList<FarmCell> cells)
     {
         final int kActiveCellBorderColor = Color.RED;
-        final float kActiveCellBorderWidth = 10.f;
+        final float kActiveCellBorderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         final int kInactiveCellBorderColor = Color.GREEN;
-        final float kInactiveCellBorderWidth = 5.f;
+        final float kInactiveCellBorderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+        final int kActiveCellColorAlpha = 255;
+        final int kInactiveCellColorAlpha = 100;
 
         Paint paint = new Paint();
         paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics()));
@@ -136,6 +138,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth( kInactiveCellBorderWidth );
                 paint.setColor( kInactiveCellBorderColor );
+                paint.setAlpha(kInactiveCellColorAlpha);
 
                 path.reset();
                 PointF[] cellPoints = oneCell.points();
@@ -171,6 +174,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth( kActiveCellBorderWidth );
                 paint.setColor( kActiveCellBorderColor );
+                paint.setAlpha(kActiveCellColorAlpha);
 
                 path.reset();
                 PointF[] cellPoints = oneCell.points();

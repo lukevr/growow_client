@@ -256,6 +256,7 @@ public class FieldFragment extends Fragment implements TextureView.SurfaceTextur
         mContainerView = (RelativeLayout) mRootLayout.findViewById(R.id.grid_container);
         mContainerView.addView(mVidView);
         mVidView.start();
+        mCircleProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
