@@ -16,11 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FarmsListFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FarmsListFragment.OnFarmsListInteractionListener, FieldFragment.OnFieldViewInteractionListener {
 
 
     private static final String LOG_TAG = "MainActivity";
-    private FarmFragment farmFragment;
+    private FieldFragment fieldFragment;
     private FarmsListFragment mFarmsListFragment;
     private StatFragment statFragment = new StatFragment();
     private boolean mResizeStream = true;
@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity
         trap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mResizeStream = !mResizeStream;
-                farmFragment.setResizeStream(mResizeStream);
+                fieldFragment.swapStreams();
             }
         });
 
@@ -124,18 +123,15 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_camera)
         {
-            if(farmFragment == null)
-                farmFragment = new FarmFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, farmFragment);
-            ft.addToBackStack("Field view");
-            ft.commit();
+            navigateToFieldView(0, 0);
+        }
+        else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_manage) {
+        }
+        else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        }
+        else if (id == R.id.nav_send) {
 
         }
 
@@ -145,14 +141,34 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void navigateToFieldView(int farmID, int fieldID)
+    {
+        if(fieldFragment == null) {
+            fieldFragment = new FieldFragment();
+        }
+        Bundle bundle = new Bundle();
+        bundle.putInt(FieldFragment.SELECTED_FARM_ID, farmID);
+        bundle.putInt(FieldFragment.SELECTED_FIELD_ID, fieldID);
+        fieldFragment.setArguments(bundle);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame, fieldFragment);
+        ft.addToBackStack("Field view");
+        ft.commit();
+    }
+
     /**
      * @param groupPosition
      * @param childPosition
      */
     @Override
-    public void onFragmentInteraction(int groupPosition, int childPosition)
+    public void OnFarmsListInteraction(int groupPosition, int childPosition)
     {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        onNavigationItemSelected(navigationView.getMenu().getItem(1));
+        navigateToFieldView(groupPosition, childPosition);
+    }
+
+    @Override
+    public void OnFieldViewInteraction() {
+        // nothing yet
     }
 }

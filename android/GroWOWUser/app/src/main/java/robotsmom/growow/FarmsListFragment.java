@@ -1,10 +1,6 @@
 package robotsmom.growow;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,15 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,38 +26,30 @@ public class FarmsListFragment extends Fragment
 {
     private static final String LOG_TAG = "FarmsListFragment";
     public static final int ALL_GROUPS = -1;
-    private OnFragmentInteractionListener mListener;
+    private OnFarmsListInteractionListener mListener;
     private ArrayList<Farm> mFarms;
     ExpandableListView mListView;
     LinearLayout mRootLayout;
     FarmsListAdapter mListAdapter;
-
     public FarmsListFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         mFarms = ConfigHelper.getInstance().getFarms();
-        Log.d(LOG_TAG, "onCreate finish");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Log.d(LOG_TAG, "onCreateView");
         super.onCreateView(inflater, container, savedInstanceState);
 
         mRootLayout = (LinearLayout) inflater.inflate(R.layout.fragment_farms_list, container, false);
         mListView = (ExpandableListView) mRootLayout.findViewById(R.id.farmsList);
         mListAdapter = new FarmsListAdapter(getContext(), mFarms);
         mListView.setAdapter(mListAdapter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            mListView.setIndicatorBoundsRelative(mListView.getWidth() - 45, mListView.getWidth());
-        }
-
         mListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener()
         {
             @Override
@@ -97,7 +81,7 @@ public class FarmsListFragment extends Fragment
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
             {
-                mListener.onFragmentInteraction(groupPosition, childPosition);
+                mListener.OnFarmsListInteraction(groupPosition, childPosition);
                 return true;
             }
         });
@@ -183,19 +167,17 @@ public class FarmsListFragment extends Fragment
     @Override
     public void onAttach(Context context)
     {
-        Log.d(LOG_TAG, "onAttach");
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnFarmsListInteractionListener) {
+            mListener = (OnFarmsListInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFarmsListInteractionListener");
         }
     }
 
     @Override
     public void onDetach() {
-        Log.d(LOG_TAG, "onDetach");
         super.onDetach();
         mListener = null;
     }
@@ -203,7 +185,6 @@ public class FarmsListFragment extends Fragment
     @Override
     public void onDestroyView()
     {
-        Log.d(LOG_TAG, "onDestroyView");
         super.onDestroyView();
         if( mListView != null )
         {
@@ -213,7 +194,6 @@ public class FarmsListFragment extends Fragment
                 parentViewGroup.removeAllViews();
             }
         }
-        Log.d(LOG_TAG, "onDestroyView finish");
     }
 
     @Override
@@ -232,8 +212,8 @@ public class FarmsListFragment extends Fragment
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFarmsListInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(int groupPosition, int childPosition);
+        void OnFarmsListInteraction(int groupPosition, int childPosition);
     }
 }

@@ -3,6 +3,7 @@ package robotsmom.growow;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ public class FarmPlant {
     private String plantName;
     private String variety;
     private Date plantingDate;
-    private Date ripeningPlannedDate;
+    private Date harvestDate;
     private boolean readyForHarvest;
 
     public FarmPlant(JSONObject json)
@@ -34,7 +35,7 @@ public class FarmPlant {
             plantName = json.getString("plantName");
             variety = json.getString("variety");
             plantingDate = new Date(json.getLong("plantingDate") * 1000); // convert from Unix time to millisecs
-            ripeningPlannedDate = new Date(json.getLong("ripeningPlannedDate") * 1000);
+            harvestDate = new Date(json.getLong("harvestDate") * 1000);
             readyForHarvest = json.getBoolean("readyForHarvest");
         }
         catch (JSONException e) {
@@ -82,12 +83,9 @@ public class FarmPlant {
         this.plantingDate = plantingDate;
     }
 
-    public Date getRipeningPlannedDate() {
-        return ripeningPlannedDate;
-    }
-
-    public void setRipeningPlannedDate(Date ripeningPlannedDate) {
-        this.ripeningPlannedDate = ripeningPlannedDate;
+    public Date getHarvestDate()
+    {
+        return harvestDate;
     }
 
     public boolean isReadyForHarvest() {

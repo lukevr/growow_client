@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
@@ -46,6 +47,18 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         mFactorW = factorW;
         mFactorH = factorH;
         mCells = cells;
+    }
+
+    public void selectCell(FarmCell cell)
+    {
+        for (FarmCell oneCell:mCells) {
+            if(cell.getId() == oneCell.getId())
+            {
+                oneCell.setSelected( !oneCell.isSelected() );
+                drawCells(mCells);
+                break;
+            }
+        }
     }
 
     @Override
@@ -99,7 +112,7 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         final float kInactiveCellBorderWidth = 5.f;
 
         Paint paint = new Paint();
-        paint.setTextSize(20.f);
+        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics()));
         paint.setTextAlign(Paint.Align.CENTER);
         Rect textRect = new Rect();
 

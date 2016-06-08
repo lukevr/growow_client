@@ -64,7 +64,6 @@ public class FarmsListAdapter extends BaseExpandableListAdapter
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
     {
-        Log.d(LOG_TAG, "getGroupView");
         if( null == convertView )
         {
             convertView = mInflater.inflate(R.layout.farms_list_parent_item, null);
@@ -87,14 +86,12 @@ public class FarmsListAdapter extends BaseExpandableListAdapter
 
         farmAddress.setText("Address: " + farm.getAddress().toString());
 
-        Log.d(LOG_TAG, "getGroupView finish");
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
-        Log.d(LOG_TAG, "getChildView");
         if( null == convertView )
         {
             convertView = mInflater.inflate(R.layout.farms_list_child_item, null);
@@ -111,7 +108,6 @@ public class FarmsListAdapter extends BaseExpandableListAdapter
         cellsAvailable.setText("Cells available: " + field.getCells().size());
         userCells.setText("User' cells" + field.getCells().size());
 
-        Log.d(LOG_TAG, "getChildView finish");
         return convertView;
     }
 

@@ -67,4 +67,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bundleKeySelectedFarm">SELECTED_FARM</string>
+    <string name="bundleKeySelectedField">SELECTED_FIELD</string>
+    <string name="performPlantingButton">Plant</string>
 </resources>

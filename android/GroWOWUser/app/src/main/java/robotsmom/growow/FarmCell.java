@@ -23,7 +23,8 @@ public class FarmCell
     private boolean mIsActive = true;
     private String mDescription = null;
     private String mType = null;
-    private ArrayList<FarmPlant> _plants;
+
+    private ArrayList<FarmPlant> mPlants;
 
     public FarmCell(JSONObject json)
     {
@@ -39,10 +40,10 @@ public class FarmCell
             mType = json.getString("type");
 
             // filling plants array
-            _plants = new ArrayList<FarmPlant>();
+            mPlants = new ArrayList<FarmPlant>();
             JSONArray plantsArr = json.getJSONArray("plants");
             for (int idx = 0; idx < plantsArr.length(); idx++) {
-                _plants.add(new FarmPlant(plantsArr.getJSONObject(idx)));
+                mPlants.add(new FarmPlant(plantsArr.getJSONObject(idx)));
             }
         }
         catch (JSONException e) {
@@ -106,8 +107,8 @@ public class FarmCell
 
     public String description() {
         StringBuilder str = new StringBuilder();
-        for (int idx=0; idx < _plants.size(); idx++) {
-            str.append(_plants.get(idx).getPlantName() + "; ");
+        for (int idx = 0; idx < mPlants.size(); idx++) {
+            str.append(mPlants.get(idx).getPlantName() + "; ");
         }
         return str.toString();
     }
@@ -138,4 +139,13 @@ public class FarmCell
 
         return (new PointF[]{lt, rt, rb, lb});
     }
+
+    public ArrayList<FarmPlant> getPlants() {
+        return mPlants;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
 }
