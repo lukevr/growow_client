@@ -3,7 +3,6 @@ package robotsmom.growow;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,13 +13,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FarmsListFragment.OnFarmsListInteractionListener, FieldFragment.OnFieldViewInteractionListener {
 
 
     private static final String LOG_TAG = "MainActivity";
-    private FieldFragment fieldFragment;
+    private FieldFragment mFieldFragment;
     private FarmsListFragment mFarmsListFragment;
     private StatFragment statFragment = new StatFragment();
     private boolean mResizeStream = true;
@@ -30,6 +31,10 @@ public class MainActivity extends AppCompatActivity
     {
         Log.d(LOG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
+
+        // Crashlitycs lib
+        Fabric.with(this, new Crashlytics());
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,8 +44,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                mFieldFragment.switchGrid();
             }
         });
 
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         trap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fieldFragment.swapStreams();
+                mFieldFragment.swapStreams();
             }
         });
 
@@ -143,16 +147,16 @@ public class MainActivity extends AppCompatActivity
 
     private void navigateToFieldView(int farmID, int fieldID)
     {
-        if(fieldFragment == null) {
-            fieldFragment = new FieldFragment();
+        if(mFieldFragment == null) {
+            mFieldFragment = new FieldFragment();
         }
         Bundle bundle = new Bundle();
         bundle.putInt(FieldFragment.SELECTED_FARM_ID, farmID);
         bundle.putInt(FieldFragment.SELECTED_FIELD_ID, fieldID);
-        fieldFragment.setArguments(bundle);
+        mFieldFragment.setArguments(bundle);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, fieldFragment);
+        ft.replace(R.id.mainFrame, mFieldFragment);
         ft.addToBackStack("Field view");
         ft.commit();
     }

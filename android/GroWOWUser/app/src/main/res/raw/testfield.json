@@ -23,7 +23,7 @@
           "fields":
           [
               {
-              "id": "1",
+              "id": "Booty groovy",
               "liveURL": "rtsp://178.214.221.154:1935/live/myStream",
               "timelapseURL": "rtsp://178.214.221.154:1935/live/StreamLapse",
               "size": {
@@ -32,13 +32,13 @@
                   "height": "450"
               },
               "distorsion": {
-                  "leftTopX": "0.20",
-                  "leftTopY": "0.01",
-                  "rightTopX": "-0.18",
-                  "rightTopY": "0",
+                  "leftTopX": "0.24",
+                  "leftTopY": "0.03",
+                  "rightTopX": "-0.15",
+                  "rightTopY": "0.03",
                   "rightBottomX": "0",
-                  "rightBottomY": "-0.01",
-                  "leftBottomX": "0",
+                  "rightBottomY": "0.0",
+                  "leftBottomX": "0.02",
                   "leftBottomY": "0"
               },
               "cells": [{
@@ -324,7 +324,7 @@
               ]
           },
               {
-                  "id": "2",
+                  "id": "Summy hamster",
                   "liveURL": "rtsp://178.214.221.154:1935/live/myStream",
                   "timelapseURL": "rtsp://178.214.221.154:1935/live/StreamLapse",
                   "size": {
@@ -333,13 +333,13 @@
                       "height": "450"
                   },
                   "distorsion": {
-                      "leftTopX": "0.20",
-                      "leftTopY": "0.01",
-                      "rightTopX": "-0.18",
-                      "rightTopY": "0",
+                      "leftTopX": "0.0",
+                      "leftTopY": "0.0",
+                      "rightTopX": "0.0",
+                      "rightTopY": "0.0",
                       "rightBottomX": "0",
-                      "rightBottomY": "-0.01",
-                      "leftBottomX": "0",
+                      "rightBottomY": "0.0",
+                      "leftBottomX": "0.0",
                       "leftBottomY": "0"
                   },
                   "cells": [{
@@ -625,7 +625,7 @@
                   ]
               },
               {
-                  "id": "3",
+                  "id": "Greedy ork",
                   "liveURL": "rtsp://178.214.221.154:1935/live/myStream",
                   "timelapseURL": "rtsp://178.214.221.154:1935/live/StreamLapse",
                   "size": {
@@ -634,13 +634,13 @@
                       "height": "450"
                   },
                   "distorsion": {
-                      "leftTopX": "0.20",
-                      "leftTopY": "0.01",
+                      "leftTopX": "0.01",
+                      "leftTopY": "0.08",
                       "rightTopX": "-0.18",
-                      "rightTopY": "0",
+                      "rightTopY": "0.08",
                       "rightBottomX": "0",
                       "rightBottomY": "-0.01",
-                      "leftBottomX": "0",
+                      "leftBottomX": "0.1",
                       "leftBottomY": "0"
                   },
                   "cells": [{
@@ -949,7 +949,7 @@
             "fields":
             [
                 {
-                    "id": "1",
+                    "id": "Nitro nano",
                     "liveURL": "rtsp://178.214.221.154:1935/live/myStream",
                     "timelapseURL": "rtsp://178.214.221.154:1935/live/StreamLapse",
                     "size": {
@@ -958,13 +958,13 @@
                         "height": "450"
                     },
                     "distorsion": {
-                        "leftTopX": "0.20",
-                        "leftTopY": "0.01",
-                        "rightTopX": "-0.18",
-                        "rightTopY": "0",
+                        "leftTopX": "0.0",
+                        "leftTopY": "0.0",
+                        "rightTopX": "0.0",
+                        "rightTopY": "0.0",
                         "rightBottomX": "0",
-                        "rightBottomY": "-0.01",
-                        "leftBottomX": "0",
+                        "rightBottomY": "0.0",
+                        "leftBottomX": "0.0",
                         "leftBottomY": "0"
                     },
                     "cells": [{
@@ -1259,13 +1259,13 @@
                         "height": "450"
                     },
                     "distorsion": {
-                        "leftTopX": "0.20",
-                        "leftTopY": "0.01",
+                        "leftTopX": "0.01",
+                        "leftTopY": "0.08",
                         "rightTopX": "-0.18",
-                        "rightTopY": "0",
+                        "rightTopY": "0.08",
                         "rightBottomX": "0",
                         "rightBottomY": "-0.01",
-                        "leftBottomX": "0",
+                        "leftBottomX": "0.1",
                         "leftBottomY": "0"
                     },
                     "cells": [{
@@ -1560,13 +1560,13 @@
                         "height": "450"
                     },
                     "distorsion": {
-                        "leftTopX": "0.20",
-                        "leftTopY": "0.01",
+                        "leftTopX": "0.01",
+                        "leftTopY": "0.08",
                         "rightTopX": "-0.18",
-                        "rightTopY": "0",
+                        "rightTopY": "0.08",
                         "rightBottomX": "0",
                         "rightBottomY": "-0.01",
-                        "leftBottomX": "0",
+                        "leftBottomX": "0.1",
                         "leftBottomY": "0"
                     },
                     "cells": [{

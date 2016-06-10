@@ -30,6 +30,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="robotsmom.growow.MainActivity" />
         </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="554ee819c527e61b838fa4f10f1acab1e7304b92"
+            />
+
     </application>
 
 </manifest>

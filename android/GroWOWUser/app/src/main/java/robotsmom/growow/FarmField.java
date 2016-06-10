@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class FarmField
 {
-    private int id;
+    private String id;
     private float width;
     private float height;
     private String units;
@@ -27,7 +27,7 @@ public class FarmField
     {
         try {
             // properties
-            id = json.getInt("id");
+            id = json.getString("id");
             streamURL = json.getString("liveURL");
             timelapsURL = json.getString("timelapseURL");
 
@@ -102,7 +102,7 @@ public class FarmField
         return timelapsURL;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

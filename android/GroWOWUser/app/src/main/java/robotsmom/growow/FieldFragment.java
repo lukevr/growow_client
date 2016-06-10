@@ -259,6 +259,16 @@ public class FieldFragment extends Fragment implements TextureView.SurfaceTextur
         mCircleProgress.setVisibility(View.VISIBLE);
     }
 
+    public void switchGrid()
+    {
+        if( mGridView.getVisibility() == View.VISIBLE ) {
+            mGridView.setVisibility(View.GONE);
+        }
+        else {
+            mGridView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onAttach(Context context)
     {

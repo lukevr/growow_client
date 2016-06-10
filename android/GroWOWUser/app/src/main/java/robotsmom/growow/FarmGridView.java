@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -111,11 +112,14 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
         final int kInactiveCellBorderColor = Color.GREEN;
         final float kInactiveCellBorderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
         final int kActiveCellColorAlpha = 255;
-        final int kInactiveCellColorAlpha = 100;
+        final int kInactiveCellColorAlpha = 150;
+        final int kInactiveCellTitleFontSize = 12;
+        final int kActiveCellTitleFontSize = kInactiveCellTitleFontSize;
 
         Paint paint = new Paint();
-        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics()));
+        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, kInactiveCellTitleFontSize, getResources().getDisplayMetrics()));
         paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         Rect textRect = new Rect();
 
         mFactorW = getWidth() / mFieldW;
@@ -159,9 +163,10 @@ public class FarmGridView extends TextureView implements View.OnTouchListener
                 String descr = oneCell.description();
                 paint.getTextBounds(oneCell.description(), 0, descr.length(), textRect);
                 canvas.drawText(oneCell.description(),
-                        (oneCell.left() + oneCell.width()/2) * mFactorW,
-                        (oneCell.bottom() - textRect.height()) * mFactorH,
-                        paint);
+                                (oneCell.left() + oneCell.width()/2) * mFactorW,
+                                (oneCell.bottom() - textRect.height()) * mFactorH,
+                                paint
+                );
             }
 
             // draw selected cells
